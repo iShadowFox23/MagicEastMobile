@@ -9,24 +9,26 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.magiceast.screen.MainScreen
-import com.example.magiceast.screen.CatalogoScreen
-import com.example.magiceast.screen.DetalleProductoScreen
-import com.example.magiceast.screen.LoginScreen
-
+import com.example.magiceast.screen.*
 import com.example.magiceast.viewmodel.CatalogoViewModel
+import com.example.magiceast.viewmodel.CarritoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+
             val catalogoViewModel = remember { CatalogoViewModel() }
+            val carritoViewModel = remember { CarritoViewModel() }
 
             Surface(color = MaterialTheme.colorScheme.background) {
-                NavHost(navController = navController, startDestination = "main") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "main"
+                ) {
 
-                    // Pantalla principal
+                    //Pantalla principal
                     composable("main") {
                         MainScreen(
                             onGoToCatalogo = { navController.navigate("catalogo") },
@@ -35,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    // Pantalla de Login
+                    //Pantalla de Login
                     composable("login") {
                         LoginScreen(
                             onBack = { navController.popBackStack() },
@@ -44,16 +46,33 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-
-                    // Catálogo
+                    //Catálogo de productos
                     composable("catalogo") {
-                        CatalogoScreen(navController, catalogoViewModel)
+                        CatalogoScreen(
+                            navController = navController,
+                            viewModel = catalogoViewModel
+                        )
                     }
 
-                    // Detalle de producto
-                    composable("detalle/{productoId}") { backStack ->
-                        val id = backStack.arguments?.getString("productoId")?.toIntOrNull() ?: -1
-                        DetalleProductoScreen(id, catalogoViewModel)
+                    //Detalle del producto
+                    composable("detalle/{productoId}") { backStackEntry ->
+                        val id = backStackEntry.arguments
+                            ?.getString("productoId")
+                            ?.toIntOrNull() ?: -1
+
+                        DetalleProductoScreen(
+                            productoId = id,
+                            viewModel = catalogoViewModel,
+                            carritoViewModel = carritoViewModel
+                        )
+                    }
+
+                    //Pantalla del carrito
+                    composable("carrito") {
+                        CarritoScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
                 }
             }

@@ -12,18 +12,6 @@
     "estado":"Bajo Stock"
   },
   {
-    "id": 26,
-    "nombre": "FinalFantasy Booster Pack",
-    "categoria": "Booster Packs",
-    "precio": 9990,
-    "precioAntiguo": 10600,
-    "descuento": 5,
-    "imagen": "file:///android_asset/images/spoderman.jpg",
-    "descripcion": "FinalFantasy Booster Pack",
-    "stock":42,
-    "estado":"Disponible"
-  },
-  {
     "id": 2,
     "nombre": "MTG Caja de Collector Boosters - Marvel's Spider-Man",
     "categoria": "Booster Packs",
@@ -84,7 +72,7 @@
       "file:///android_asset/images/1e65c7e3-8419-5eb2-b102-b3762c6c8c5d_800x.png",
       "file:///android_asset/images/dsc-6-valgavoth-harrower-of-souls.jpg"
     ],
-    "descripcion": "Infunde miedo en los corazones de tus oponentes con los mazos Commander de Duskmourn: House of Horror. Cada caja incluye un mazo listo para jugar con 100 cartas de Magic (2 cartas legendarias foil tradicionales sin borde, 98 cartas no foil), 10 cartas de Archenemy, un paquete de muestra de sobres de colección de 2 cartas (contiene 1 carta foil tradicional o no foil con borde alternativo de rareza rara o superior y 1 carta poco común foil tradicional), 10 fichas de doble cara, 1 caja de mazo (puede contener 100 cartas con funda), 1 rueda de vida, 1 folleto de estrategia y 1 carta de referencia. ",
+    "descripcion": "Infunde miedo en los corazones de tus oponentes con los mazos Commander de Duskmourn: House of Horror. ",
     "stock":10,
     "estado":"Disponible"
   },
