@@ -2,6 +2,7 @@ package com.example.magiceast.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,7 +31,18 @@ fun CatalogoScreen(navController: NavController, viewModel: CatalogoViewModel) {
 
     LaunchedEffect(Unit) { viewModel.cargarProductos(context) }
 
-    Scaffold(topBar = { TopAppBar(title = { Text("Catálogo") }) }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Catálogo") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF121212),
+                    titleContentColor = Color.White
+                )
+            )
+        },
+        containerColor = Color(0xFF121212)
+    ) { padding ->
         Box(Modifier.padding(padding)) {
             if (loading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

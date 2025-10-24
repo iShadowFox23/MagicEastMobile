@@ -6,7 +6,7 @@
     "precio": 146990,
     "precioAntiguo": 160000,
     "descuento": 5,
-    "imagen": "/images/spoderman.jpg",
+    "imagen": "file:///android_asset/images/spoderman.jpg",
     "descripcion": "Spiderman Booster Pack Box",
     "stock":3,
     "estado":"Bajo Stock"
@@ -18,7 +18,7 @@
     "precio": 9990,
     "precioAntiguo": 10600,
     "descuento": 5,
-    "imagen": "/images/spoderman.jpg",
+    "imagen": "file:///android_asset/images/spoderman.jpg",
     "descripcion": "FinalFantasy Booster Pack",
     "stock":42,
     "estado":"Disponible"
@@ -30,7 +30,7 @@
     "precio": 246990,
     "precioAntiguo": 260000,
     "descuento": 5,
-    "imagen": "/images/mtg-caja-de-collector-boosters-marvel-s-spider-man-chile.png",
+    "imagen": "file:///android_asset/images/mtg-caja-de-collector-boosters-marvel-s-spider-man-chile.png",
     "descripcion": "Caja de sobres de colección de Magic: The Gathering con arte exclusivo de Marvel’s Spider-Man.",
     "stock": 4,
     "estado": "Bajo Stock"
@@ -42,7 +42,7 @@
     "precio": 89990,
     "precioAntiguo": 95000,
     "descuento": 5,
-    "imagen": "/images/Gundam.jpg",
+    "imagen": "file:///android_asset/images/Gundam.jpg",
     "descripcion": "Modelo clásico del Gundam RX-78-2, con piezas detalladas y articulación completa para exposición.",
     "stock": 2,
     "estado":"Bajo Stock"
@@ -54,7 +54,7 @@
     "precio": 129990,
     "precioAntiguo": 136800,
     "descuento": 5,
-    "imagen": "/images/GQuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX.jpg",
+    "imagen": "file:///android_asset/images/GQuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX.jpg",
     "descripcion": "Figura premium GQX con acabados de alta calidad, edición limitada para coleccionistas.",
     "stock": 6,
     "estado": "Disponible"
@@ -66,7 +66,7 @@
     "precio": 34990,
     "precioAntiguo": 34990,
     "descuento": 0,
-    "imagen": "/images/precon1.png",
+    "imagen": "file:///android_asset/images/precon1.png",
     "descripcion": "Mazo preconstruido ideal para nuevos jugadores con cartas básicas y estrategias equilibradas.",
     "stock":0,
     "estado":"Disponible"
@@ -78,11 +78,11 @@
     "precio": 79990,
     "precioAntiguo": 89990,
     "descuento": 10,
-    "imagen": "/images/EndlessPunishment.jpg",
+    "imagen": "file:///android_asset/images/EndlessPunishment.jpg",
     "imagenes": [
-      "/images/EndlessPunishment.jpg",
-      "/images/1e65c7e3-8419-5eb2-b102-b3762c6c8c5d_800x.png",
-      "/images/dsc-6-valgavoth-harrower-of-souls.jpg"
+      "file:///android_asset/images/EndlessPunishment.jpg",
+      "file:///android_asset/images/1e65c7e3-8419-5eb2-b102-b3762c6c8c5d_800x.png",
+      "file:///android_asset/images/dsc-6-valgavoth-harrower-of-souls.jpg"
     ],
     "descripcion": "Infunde miedo en los corazones de tus oponentes con los mazos Commander de Duskmourn: House of Horror. Cada caja incluye un mazo listo para jugar con 100 cartas de Magic (2 cartas legendarias foil tradicionales sin borde, 98 cartas no foil), 10 cartas de Archenemy, un paquete de muestra de sobres de colección de 2 cartas (contiene 1 carta foil tradicional o no foil con borde alternativo de rareza rara o superior y 1 carta poco común foil tradicional), 10 fichas de doble cara, 1 caja de mazo (puede contener 100 cartas con funda), 1 rueda de vida, 1 folleto de estrategia y 1 carta de referencia. ",
     "stock":10,
@@ -95,7 +95,7 @@
     "precio": 44990,
     "precioAntiguo": 44990,
     "descuento": 0,
-    "imagen": "/images/precon3.jpg",
+    "imagen": "file:///android_asset/images/precon3.jpg",
     "descripcion": "Mazo tribal de elfos que aprovecha el poder del maná verde para dominar el campo de batalla.",
     "stock":0,
     "estado":"Agotado"
@@ -107,7 +107,7 @@
     "precio": 85990,
     "precioAntiguo": 85990,
     "descuento": 0,
-    "imagen": "/images/precon4.webp",
+    "imagen": "file:///android_asset/images/precon4.webp",
     "descripcion": "Domina los cielos con este mazo de dragones que combina fuerza y fuego en cada turno.",
     "stock":2,
     "estado":"Bajo Stock"
@@ -119,7 +119,7 @@
     "precio": 55990,
     "precioAntiguo": 55990,
     "descuento": 0,
-    "imagen": "/images/precon5.jpg",
+    "imagen": "file:///android_asset/images/precon5.jpg",
     "descripcion": "Mazo azul y negro centrado en el control, el robo de cartas y las estrategias mentales.",
     "stock":5,
     "estado":"Disponible"
@@ -131,7 +131,7 @@
     "precio": 69990,
     "precioAntiguo": 69990,
     "descuento": 0,
-    "imagen": "/images/precon6.webp",
+    "imagen": "file:///android_asset/images/precon6.webp",
     "descripcion": "Mazo espiritual inspirado en Kamigawa, con criaturas etéreas y mecánicas de reanimación.",
     "stock":6,
     "estado":"Disponible"
@@ -143,7 +143,7 @@
     "precio": 47990,
     "precioAntiguo": 47990,
     "descuento": 0,
-    "imagen": "/images/precon7.webp",
+    "imagen": "file:///android_asset/images/precon7.webp",
     "descripcion": "Mazo rojo centrado en hechizos de daño directo y criaturas agresivas lideradas por Chandra.",
     "stock":2,
     "estado":"Bajo Stock"
@@ -155,7 +155,7 @@
     "precio": 89990,
     "precioAntiguo": 89990,
     "descuento": 0,
-    "imagen": "/images/precon8.png",
+    "imagen": "file:///android_asset/images/precon8.png",
     "descripcion": "Controla el poder de los Phyrexianos con este mazo de infectar y proliferar devastador.",
     "stock":0,
     "estado":"Agotado"
@@ -167,7 +167,7 @@
     "precio": 56990,
     "precioAntiguo": 56990,
     "descuento": 0,
-    "imagen": "/images/precon9.jpg",
+    "imagen": "file:///android_asset/images/precon9.jpg",
     "descripcion": "Mazo blanco con ángeles majestuosos, protección divina y efectos de curación poderosos.",
     "stock":1,
     "estado":"Bajo Stock"
@@ -179,7 +179,7 @@
     "precio": 74990,
     "precioAntiguo": 74990,
     "descuento": 0,
-    "imagen": "/images/precon10.png",
+    "imagen": "file:///android_asset/images/precon10.png",
     "descripcion": "Lidera una tripulación de piratas en busca de tesoros con este mazo lleno de saqueo y aventura.",
     "stock":7,
     "estado":"Disponible"
@@ -191,7 +191,7 @@
     "precio": 45990,
     "precioAntiguo": 45990,
     "descuento": 0,
-    "imagen": "/images/precon11.jpg",
+    "imagen": "file:///android_asset/images/precon11.jpg",
     "descripcion": "Invoca hordas de no-muertos y domina la partida desde las sombras con este mazo negro clásico.",
     "stock":9,
     "estado":"Disponible"
@@ -203,7 +203,7 @@
     "precio": 78990,
     "precioAntiguo": 78990,
     "descuento": 0,
-    "imagen": "/images/precon12.webp",
+    "imagen": "file:///android_asset/images/precon12.webp",
     "descripcion": "Aprovecha las sinergias de las tierras con criaturas elementales y habilidades de Landfall.",
     "stock":12,
     "estado":"Disponible"
@@ -215,7 +215,7 @@
     "precio": 42990,
     "precioAntiguo": 42990,
     "descuento": 0,
-    "imagen": "/images/precon13.jpg",
+    "imagen": "file:///android_asset/images/precon13.jpg",
     "descripcion": "Mazo rojo rápido y caótico lleno de goblins listos para el combate desde el primer turno.",
     "stock":6,
     "estado":"Disponible"
@@ -227,7 +227,7 @@
     "precio": 82990,
     "precioAntiguo": 82990,
     "descuento": 0,
-    "imagen": "/images/precon14.jpg",
+    "imagen": "file:///android_asset/images/precon14.jpg",
     "descripcion": "Conviértete en el señor de la noche con este mazo lleno de vampiros y efectos de drenaje de vida.",
     "stock":9,
     "estado":"Disponible"
@@ -239,7 +239,7 @@
     "precio": 51990,
     "precioAntiguo": 51990,
     "descuento": 0,
-    "imagen": "/images/precon15.jpg",
+    "imagen": "file:///android_asset/images/precon15.jpg",
     "descripcion": "Combina el poder azul y rojo para lanzar hechizos potentes y controlar el flujo del combate.",
     "stock":3,
     "estado":"Bajo Stock"
@@ -251,7 +251,7 @@
     "precio": 78990,
     "precioAntiguo": 78990,
     "descuento": 0,
-    "imagen": "/images/precon16.jpg",
+    "imagen": "file:///android_asset/images/precon16.jpg",
     "descripcion": "Invoca bestias colosales y combina la fuerza del verde, rojo y blanco en este mazo salvaje.",
     "stock":8,
     "estado":"Disponible"
@@ -263,7 +263,7 @@
     "precio": 54990,
     "precioAntiguo": 54990,
     "descuento": 0,
-    "imagen": "/images/precon17.webp",
+    "imagen": "file:///android_asset/images/precon17.webp",
     "descripcion": "Lucha con honor junto a caballeros de Dominaria con sinergias de combate y protección.",
     "stock":10,
     "estado":"Disponible"
@@ -275,7 +275,7 @@
     "precio": 86990,
     "precioAntiguo": 86990,
     "descuento": 0,
-    "imagen": "/images/precon18.jpg",
+    "imagen": "file:///android_asset/images/precon18.jpg",
     "descripcion": "Controla poderosos artefactos y combos mecánicos en este mazo inspirado en Urza.",
     "stock":6,
     "estado":"Disponible"
@@ -287,7 +287,7 @@
     "precio": 57990,
     "precioAntiguo": 57990,
     "descuento": 0,
-    "imagen": "/images/precon19.jpg",
+    "imagen": "file:///android_asset/images/precon19.jpg",
     "descripcion": "Mazo verde y blanco enfocado en criaturas, sinergias y trabajo en equipo para dominar el campo.",
     "stock":13,
     "estado":"Disponible"
@@ -299,7 +299,7 @@
     "precio": 90990,
     "precioAntiguo": 90990,
     "descuento": 0,
-    "imagen": "/images/precon20.jpg",
+    "imagen": "file:///android_asset/images/precon20.jpg",
     "descripcion": "Un mazo explosivo de cinco colores con cartas legendarias de distintas eras de Magic.",
     "stock":8,
     "estado":"Disponible"
