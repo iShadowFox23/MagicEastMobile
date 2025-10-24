@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.magiceast.screen.*
 import com.example.magiceast.viewmodel.CatalogoViewModel
 import com.example.magiceast.viewmodel.CarritoViewModel
+import com.example.magiceast.viewmodel.RegistroViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +73,14 @@ class MainActivity : ComponentActivity() {
                         CarritoScreen(
                             navController = navController,
                             carritoViewModel = carritoViewModel
+                        )
+                    }
+                    //Pantalla de Registro
+                    composable("registro") {
+                        RegistroScreen(
+                            onBack = { navController.popBackStack() },
+                            onRegisterSuccess = { navController.navigate("main") }
+
                         )
                     }
                 }
