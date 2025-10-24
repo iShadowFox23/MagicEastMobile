@@ -39,8 +39,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
-            .padding(24.dp),
+            .background(Color(0xFF121212)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -88,7 +87,7 @@ fun LoginScreen(
             label = { Text("Correo electrónico", color = Color.Gray) },
             isError = emailError != null,
             supportingText = { emailError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.width(400.dp).align(Alignment.CenterHorizontally),
             textStyle = LocalTextStyle.current.copy(color = Color.White)
         )
 
@@ -105,7 +104,7 @@ fun LoginScreen(
                 PasswordVisualTransformation(),
             isError = passwordError != null,
             supportingText = { passwordError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.width(400.dp).align(Alignment.CenterHorizontally),
             textStyle = LocalTextStyle.current.copy(color = Color.White),
             trailingIcon = {
                 val image = if (passwordVisible)
@@ -133,7 +132,7 @@ fun LoginScreen(
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally)
         ) {
             Text("Entrar", color = Color.White, fontWeight = FontWeight.Bold)
         }
@@ -144,7 +143,7 @@ fun LoginScreen(
         Button(
             onClick = onRegister,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally)
         ) {
             Text("Registrarse", color = Color.White, fontWeight = FontWeight.Bold)
         }

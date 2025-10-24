@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             Surface(color = MaterialTheme.colorScheme.background) {
                 NavHost(navController = navController, startDestination = "main") {
 
-                    // 🏠 Pantalla principal
+                    // Pantalla principal
                     composable("main") {
                         MainScreen(
                             onGoToCatalogo = { navController.navigate("catalogo") },
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    // 🔐 Pantalla de Login
+                    // Pantalla de Login
                     composable("login") {
                         LoginScreen(
                             onBack = { navController.popBackStack() },
@@ -45,12 +45,12 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                    // 🛒 Catálogo
+                    // Catálogo
                     composable("catalogo") {
                         CatalogoScreen(navController, catalogoViewModel)
                     }
 
-                    // 📦 Detalle de producto
+                    // Detalle de producto
                     composable("detalle/{productoId}") { backStack ->
                         val id = backStack.arguments?.getString("productoId")?.toIntOrNull() ?: -1
                         DetalleProductoScreen(id, catalogoViewModel)
