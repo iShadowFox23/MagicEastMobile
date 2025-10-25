@@ -10,6 +10,7 @@ class RegistroViewModel : ViewModel(){
     var email = mutableStateOf("")
     var contrasena = mutableStateOf("")
     var fechaNacimiento = mutableStateOf("")
+    var rut = mutableStateOf("")
 
     var ofertas = mutableStateOf(false)
     var noticias =  mutableStateOf(false)
@@ -19,6 +20,7 @@ class RegistroViewModel : ViewModel(){
     var emailError = mutableStateOf<String?>(null)
     var contrasenaError = mutableStateOf<String?>(null)
     var fechaNacimientoError = mutableStateOf<String?>(null)
+    var rutError = mutableStateOf<String?>(null)
 
     // Regex para email válido
     private val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\$")
@@ -28,6 +30,9 @@ class RegistroViewModel : ViewModel(){
 
     //Regex para fecha naciemiento
     private val fechaNacimientoRegex = Regex("\\d{2}/\\d{2}/\\d{4}")
+    //Regex para rut
+    private val rutRegex = Regex("^[0-9]{1,2}\\.?[0-9]{3}\\.?[0-9]{3}\\-[0-9Kk]\$")
+
 
     fun validar(): Boolean{
         var valid = true
@@ -65,6 +70,11 @@ class RegistroViewModel : ViewModel(){
             fechaNacimientoError.value = "Fecha de nacimiento no valida (DD/MM/AAAA)"
             valid = false
         }else fechaNacimientoError.value = null
+        //Validar Rut
+        if (!rutRegex.matches(rut.value)){
+            rutError.value = "El rut ingresado no es valido"
+            valid = false
+        }else rutError.value = null
 
         return valid
     }

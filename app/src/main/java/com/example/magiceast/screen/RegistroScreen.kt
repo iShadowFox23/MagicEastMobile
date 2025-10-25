@@ -36,11 +36,14 @@ fun RegistroScreen(
     val email by viewModel.email
     val contrasena by viewModel.contrasena
     val fechaNacimiento by viewModel.fechaNacimiento
+    val rut by viewModel.rut
     val nombreError by viewModel.nombreError
     val apellidosError by viewModel.apellidosError
     val emailError by viewModel.emailError
     val contrasenaError by viewModel.contrasenaError
     val fechaNacimientoError by viewModel.fechaNacimientoError
+    val rutError by viewModel.rutError
+    var showSuccessDialog by remember { mutableStateOf(false) }
 
     var contrasenaVisible by remember { mutableStateOf(false)}
 
@@ -79,6 +82,19 @@ fun RegistroScreen(
             label = { Text("Apellidos", color = Color.Gray) },
             isError = apellidosError != null,
             supportingText = { apellidosError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
+            modifier = Modifier.width(400.dp),
+            textStyle = LocalTextStyle.current.copy(color = Color.White)
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        // Rut
+        OutlinedTextField(
+            value = rut,
+            onValueChange = { viewModel.rut.value = it },
+            label = { Text("RUT", color = Color.Gray) },
+            isError = rutError != null,
+            supportingText = { rutError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
             modifier = Modifier.width(400.dp),
             textStyle = LocalTextStyle.current.copy(color = Color.White)
         )
@@ -169,7 +185,8 @@ fun RegistroScreen(
         Button(
             onClick = {
                 if (viewModel.validar()) {
-                    onRegisterSuccess()
+                    showSuccessDialog = true
+
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
@@ -184,6 +201,26 @@ fun RegistroScreen(
         TextButton(onClick = onBack) {
             Text("Volver al inicio", color = Color.Gray)
         }
+    }
+    //Popup de cuenta registrada con exito
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSuccessDialog = false
+                        onRegisterSuccess()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B))
+                ) {
+                    Text("Aceptar", color = Color.White)
+                }
+            },
+            title = { Text("Cuenta creada con éxito", color = Color.White) },
+            text = { Text("Tu cuenta ha sido registrada correctamente.", color = Color.LightGray) },
+            containerColor = Color(0xFF1E1E1E)
+        )
     }
 
 }

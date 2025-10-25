@@ -81,21 +81,27 @@ class MainActivity : ComponentActivity() {
                         CheckoutScreen(
                             navController = navController,
                             carritoViewModel = carritoViewModel,
-                            onPurchaseComplete = { }
+                            onPurchaseComplete = { success ->
+                                if (success) {
+                                    carritoViewModel.limpiarCarrito()
+                                    navController.navigate("checkoutexito")
+                                } else {
+                                    navController.navigate("checkoutfail")
+                                }
+                            }
                         )
                     }
                     //Compra exitosa
                     composable("checkoutexito") {
                         CompraExitosaScreen(
+                            onContinueShopping = { navController.navigate("catalogo") },
                             onGoHome = { navController.navigate("main") }
                         )
                     }
                     //Compra fallida
                     composable("checkoutfail") {
-                        CheckoutScreen(
-                            navController = navController,
-                            carritoViewModel = carritoViewModel,
-                            onPurchaseComplete = { }
+                        CompraRechazadaScreen(
+                            onGoToCart = { navController.navigate("carrito") }
                         )
                     }
                     //Registro
@@ -106,8 +112,15 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    //Back Office (solo admin)
+                    //Back Office (main)
                     composable("admin") {
+                        MainBackOfficeScreen(
+                            onGoToCatalogoAdmin = { navController.navigate("admincatalogo") }
+                        )
+                    }
+
+                    //Back Office (catalogo)
+                    composable("admincatalogo") {
                         BackOfficeScreen(
                             onBack = {
                                 loginViewModel.clearErrors()

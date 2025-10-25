@@ -146,22 +146,33 @@ fun CheckoutScreen(
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
-
-
             // Botón de Pago
             item {
                 Button(
                     onClick = {
-                        val success = Math.random() > 0.3 // 70% de éxito
+                        val success = when (envioSeleccionado.first) {
+                            "Estándar (3-5 días)" -> true   // Compra exitosa
+                            "Express (1-2 días)" -> false  // Compra fallida
+                            else -> false
+                        }
+
                         onPurchaseComplete(success)
                     },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Pagar", color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Pagar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
+
         }
     }
 }
