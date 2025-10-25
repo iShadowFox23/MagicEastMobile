@@ -10,9 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.magiceast.screen.*
-import com.example.magiceast.viewmodel.CatalogoViewModel
-import com.example.magiceast.viewmodel.CarritoViewModel
-import com.example.magiceast.viewmodel.RegistroViewModel
+import com.example.magiceast.viewmodel.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,13 +20,13 @@ class MainActivity : ComponentActivity() {
 
             val catalogoViewModel = remember { CatalogoViewModel() }
             val carritoViewModel = remember { CarritoViewModel() }
+            val loginViewModel = remember { LoginViewModel() }
 
             Surface(color = MaterialTheme.colorScheme.background) {
                 NavHost(
                     navController = navController,
                     startDestination = "main"
                 ) {
-
                     //Pantalla principal
                     composable("main") {
                         MainScreen(
@@ -42,12 +40,13 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         LoginScreen(
                             onBack = { navController.popBackStack() },
-                            onLoginSuccess = { navController.navigate("catalogo") },
+                            onLoginAdmin = { navController.navigate("admin") },
+                            onLoginUser = { navController.navigate("catalogo") },
                             onRegister = { navController.navigate("registro") }
                         )
                     }
 
-                    //Catálogo de productos
+                    // Catálogo de productos
                     composable("catalogo") {
                         CatalogoScreen(
                             navController = navController,
@@ -68,19 +67,31 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    //Pantalla del carrito
+                    //Carrito
                     composable("carrito") {
                         CarritoScreen(
                             navController = navController,
                             carritoViewModel = carritoViewModel
                         )
                     }
-                    //Pantalla de Registro
+
+                    //Registro
                     composable("registro") {
                         RegistroScreen(
                             onBack = { navController.popBackStack() },
                             onRegisterSuccess = { navController.navigate("main") }
+                        )
+                    }
 
+                    //Back Office (solo admin)
+                    composable("admin") {
+                        BackOfficeScreen(
+                            onBack = {
+                                loginViewModel.clearErrors()
+                                navController.navigate("login") {
+                                    popUpTo("main") { inclusive = true }
+                                }
+                            }
                         )
                     }
                 }

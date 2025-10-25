@@ -47,6 +47,10 @@ class LoginViewModel : ViewModel() {
         return isValid
     }
 
+    fun isAdmin(): Boolean {
+        return email.value == "magiceast@admin.cl" && password.value == "Admin123!"
+    }
+
     fun login(): Boolean {
         return validate()
     }

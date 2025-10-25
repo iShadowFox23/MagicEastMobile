@@ -25,7 +25,8 @@ import com.example.magiceast.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(
     onBack: () -> Unit = {},
-    onLoginSuccess: () -> Unit = {},
+    onLoginAdmin: () -> Unit = {},
+    onLoginUser: () -> Unit = {},
     onRegister: () -> Unit = {}
 ) {
     val viewModel: LoginViewModel = viewModel()
@@ -43,7 +44,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        // 🖼 Banner superior
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +88,9 @@ fun LoginScreen(
             label = { Text("Correo electrónico", color = Color.Gray) },
             isError = emailError != null,
             supportingText = { emailError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
-            modifier = Modifier.width(400.dp).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .width(400.dp)
+                .align(Alignment.CenterHorizontally),
             textStyle = LocalTextStyle.current.copy(color = Color.White)
         )
 
@@ -104,7 +107,9 @@ fun LoginScreen(
                 PasswordVisualTransformation(),
             isError = passwordError != null,
             supportingText = { passwordError?.let { Text(it, color = Color.Red, fontSize = 12.sp) } },
-            modifier = Modifier.width(400.dp).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .width(400.dp)
+                .align(Alignment.CenterHorizontally),
             textStyle = LocalTextStyle.current.copy(color = Color.White),
             trailingIcon = {
                 val image = if (passwordVisible)
@@ -124,33 +129,41 @@ fun LoginScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // Botón de login
+
         Button(
             onClick = {
                 if (viewModel.validate()) {
-                    onLoginSuccess()
+                    if (viewModel.isAdmin()) {
+                        onLoginAdmin()
+                    } else {
+                        onLoginUser()
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
-            modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .width(250.dp)
+                .align(Alignment.CenterHorizontally)
         ) {
             Text("Entrar", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(12.dp))
 
-        // Botón de registro
+        //Botón de registro
         Button(
             onClick = onRegister,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
-            modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .width(250.dp)
+                .align(Alignment.CenterHorizontally)
         ) {
             Text("Registrarse", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(16.dp))
 
-        // Botón para volver
+
         TextButton(onClick = onBack) {
             Text("Volver al inicio", color = Color.Gray)
         }

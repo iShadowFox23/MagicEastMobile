@@ -28,10 +28,13 @@ import java.util.Locale
 @Composable
 fun CatalogoScreen(navController: NavController, viewModel: CatalogoViewModel) {
     val context = LocalContext.current
-    val productos by viewModel.productos.collectAsState()
-    val loading by viewModel.loading.collectAsState()
 
-    LaunchedEffect(Unit) { viewModel.cargarProductos(context) }
+
+    val productos = viewModel.productos
+
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos(context)
+    }
 
     Scaffold(
         topBar = {
@@ -54,21 +57,27 @@ fun CatalogoScreen(navController: NavController, viewModel: CatalogoViewModel) {
         },
         containerColor = Color(0xFF121212)
     ) { padding ->
-        Box(Modifier.padding(padding)) {
-            if (loading) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(productos, key = { it.id }) { producto ->
-                        ProductoCard(producto) {
-                            navController.navigate("detalle/${producto.id}")
-                        }
+        if (productos.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF121212)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF121212))
+                    .padding(padding),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(productos, key = { it.id }) { producto ->
+                    ProductoCard(producto) {
+                        navController.navigate("detalle/${producto.id}")
                     }
                 }
             }
@@ -84,7 +93,8 @@ fun ProductoCard(producto: Producto, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
     ) {
         Row(
             Modifier.padding(12.dp),
@@ -98,13 +108,14 @@ fun ProductoCard(producto: Producto, onClick: () -> Unit) {
             )
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
+                Text(producto.nombre, color = Color.White, style = MaterialTheme.typography.titleMedium)
                 Text(
                     text = "Precio: $${String.format(Locale("es", "CL"), "%,d", producto.precio.toInt())}",
+                    color = Color.LightGray,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 producto.descripcion?.let {
-                    Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 2)
+                    Text(it, color = Color.Gray, style = MaterialTheme.typography.bodySmall, maxLines = 2)
                 }
             }
         }

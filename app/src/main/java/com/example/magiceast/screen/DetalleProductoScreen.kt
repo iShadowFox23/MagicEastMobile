@@ -134,7 +134,7 @@ fun DetalleProductoScreen(
                         Button(
                             onClick = {
                                 repeat(cantidad) { carritoViewModel.agregarProducto(p) }
-                                detalleViewModel.setMensaje("🛒 ${cantidad} × ${p.nombre} agregado(s)")
+                                detalleViewModel.setMensaje("${cantidad} × ${p.nombre} agregado(s)")
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
                             modifier = Modifier.fillMaxWidth()
