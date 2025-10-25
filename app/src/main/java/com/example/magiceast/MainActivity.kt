@@ -71,10 +71,33 @@ class MainActivity : ComponentActivity() {
                     composable("carrito") {
                         CarritoScreen(
                             navController = navController,
-                            carritoViewModel = carritoViewModel
+                            carritoViewModel = carritoViewModel,
+                            onFinalizarCompra = { navController.navigate("checkout") }
                         )
                     }
 
+                    //Finalizar Compra
+                    composable("checkout") {
+                        CheckoutScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel,
+                            onPurchaseComplete = { }
+                        )
+                    }
+                    //Compra exitosa
+                    composable("checkoutexito") {
+                        CompraExitosaScreen(
+                            onGoHome = { navController.navigate("main") }
+                        )
+                    }
+                    //Compra fallida
+                    composable("checkoutfail") {
+                        CheckoutScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel,
+                            onPurchaseComplete = { }
+                        )
+                    }
                     //Registro
                     composable("registro") {
                         RegistroScreen(

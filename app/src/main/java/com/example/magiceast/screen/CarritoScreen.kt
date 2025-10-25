@@ -24,7 +24,8 @@ import com.example.magiceast.viewmodel.CarritoViewModel
 @Composable
 fun CarritoScreen(
     navController: NavController,
-    carritoViewModel: CarritoViewModel
+    carritoViewModel: CarritoViewModel,
+    onFinalizarCompra: () -> Unit = {}
 ) {
     val carrito by carritoViewModel.carrito.collectAsState()
 
@@ -155,7 +156,7 @@ fun CarritoScreen(
                     )
 
                     Button(
-                        onClick = { /* TODO: proceso de pago */ },
+                        onClick = onFinalizarCompra,
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
