@@ -8,9 +8,10 @@ import com.google.gson.reflect.TypeToken
 
 object ProductoRepository {
 
-    //Lista para productos compartida entre catalogo y BO
+    //Lista observable compartida entre catálogo y back office
     private val _productos = mutableStateListOf<Producto>()
     val productos: List<Producto> get() = _productos
+
 
     fun cargarProductos(context: Context, filename: String = "productos.json") {
         if (_productos.isNotEmpty()) return
@@ -19,6 +20,7 @@ object ProductoRepository {
             val json = context.assets.open(filename).bufferedReader().use { it.readText() }
             val type = object : TypeToken<List<Producto>>() {}.type
             val lista = Gson().fromJson<List<Producto>>(json, type)
+            _productos.clear()
             _productos.addAll(lista)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -36,7 +38,10 @@ object ProductoRepository {
         val index = _productos.indexOfFirst { it.id == id }
         if (index != -1) {
             val producto = _productos[index]
-            _productos[index] = producto.copy(nombre = nuevoNombre, precio = nuevoPrecio)
+            _productos[index] = producto.copy(
+                nombre = nuevoNombre.ifBlank { producto.nombre },
+                precio = if (nuevoPrecio > 0) nuevoPrecio else producto.precio
+            )
         }
     }
 
@@ -65,6 +70,10 @@ object ProductoRepository {
 
 
     fun agregarProducto(producto: Producto) {
+        if (_productos.any { it.id == producto.id }) {
+            println("Producto con ID ${producto.id} ya existe, no se agregó.")
+            return
+        }
         _productos.add(producto)
     }
 
