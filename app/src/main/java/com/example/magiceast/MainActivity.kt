@@ -101,6 +101,7 @@ class MainActivity : ComponentActivity() {
                     //Compra fallida
                     composable("checkoutfail") {
                         CompraRechazadaScreen(
+                            onRetry = {navController.navigate("checkout")},
                             onGoToCart = { navController.navigate("carrito") }
                         )
                     }
