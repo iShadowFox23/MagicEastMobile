@@ -32,7 +32,8 @@ class MainActivity : ComponentActivity() {
                         MainScreen(
                             onGoToCatalogo = { navController.navigate("catalogo") },
                             onLoginClick = { navController.navigate("login") },
-                            onRegisterClick = { navController.navigate("registro") }
+                            onRegisterClick = { navController.navigate("registro") },
+                            onCardClick = { navController.navigate("mtgCards") }
                         )
                     }
 
@@ -130,6 +131,11 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
+                    }
+
+                    //Catalogo Cartas
+                    composable("mtgCards") {
+                        MtgCardsScreen()
                     }
                 }
             }

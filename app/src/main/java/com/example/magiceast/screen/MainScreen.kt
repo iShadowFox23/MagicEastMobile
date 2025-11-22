@@ -25,7 +25,8 @@ import coil.compose.rememberAsyncImagePainter
 fun MainScreen(
     onGoToCatalogo: () -> Unit,
     onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {}
+    onRegisterClick: () -> Unit = {},
+    onCardClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -116,6 +117,24 @@ fun MainScreen(
         ) {
             Text(
                 text = "Registrarse",
+                fontSize = 18.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Button(
+            onClick = onCardClick,
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Cartas",
                 fontSize = 18.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
