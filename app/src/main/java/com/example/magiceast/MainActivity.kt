@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                             onGoToCatalogo = { navController.navigate("catalogo") },
                             onLoginClick = { navController.navigate("login") },
                             onRegisterClick = { navController.navigate("registro") },
-                            onCardClick = { navController.navigate("mtgCards") }
+                            onCardClick = { navController.navigate("catalogoCartas") }
                         )
                     }
 
@@ -134,8 +134,18 @@ class MainActivity : ComponentActivity() {
                     }
 
                     //Catalogo Cartas
-                    composable("mtgCards") {
-                        MtgCardsScreen()
+                    composable("catalogoCartas") {
+                        CatalogoCartasScreen(navController = navController)
+                    }
+
+                    // Single carta
+                    composable("singleCarta/{cartaId}") { backStackEntry ->
+                        val id = backStackEntry.arguments?.getString("cartaId") ?: ""
+                        SingleCartaScreen(
+                            navController = navController,
+                            cartaId = id,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
                 }
             }

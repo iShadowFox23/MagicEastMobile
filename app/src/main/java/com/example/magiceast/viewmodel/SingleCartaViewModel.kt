@@ -1,6 +1,5 @@
 package com.example.magiceast.viewmodel
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,35 +9,35 @@ import com.example.magiceast.data.model.Carta
 import com.example.magiceast.data.repository.MtgCardsRepository
 import kotlinx.coroutines.launch
 
-data class MtgCardsUiState(
+data class SingleCartaUiState(
     val loading: Boolean = false,
-    val cards: List<Carta> = emptyList(),
+    val carta: Carta? = null,
     val error: String? = null
 )
 
-class MtgCardsViewModel(
+class SingleCartaViewModel(
     private val repository: MtgCardsRepository = MtgCardsRepository()
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(MtgCardsUiState())
+    var uiState by mutableStateOf(SingleCartaUiState())
         private set
 
-    fun cargarCards(query: String = "game:paper") {
+    fun loadCard(id: String) {
         uiState = uiState.copy(loading = true, error = null)
 
         viewModelScope.launch {
-            repository.getCards(query)
-                .onSuccess { cards ->
+            repository.getCardById(id)
+                .onSuccess { card ->
                     uiState = uiState.copy(
                         loading = false,
-                        cards = cards,
+                        carta = card,
                         error = null
                     )
                 }
                 .onFailure { throwable ->
                     uiState = uiState.copy(
                         loading = false,
-                        error = throwable.message ?: "Error al cargar cartas"
+                        error = throwable.message ?: "Error al cargar la carta"
                     )
                 }
         }

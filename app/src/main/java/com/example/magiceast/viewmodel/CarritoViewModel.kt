@@ -2,6 +2,7 @@ package com.example.magiceast.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.magiceast.model.Producto
+import com.example.magiceast.data.model.Carta
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -23,6 +24,39 @@ class CarritoViewModel : ViewModel() {
             }
         } else {
             listaActual.add(ItemCarrito(producto))
+        }
+
+        _carrito.value = listaActual.toList()
+    }
+
+    fun agregarCartaAlCarrito(carta: Carta, cantidad: Int) {
+
+        // Conversion de carta a un Producto
+        val producto = Producto(
+            id = carta.id?.hashCode() ?: carta.hashCode(),
+            precio = carta.valor,
+            precioAntiguo = carta.valor,
+            descuento = 0,
+            stock = carta.stock,
+            nombre = carta.name ?: "Carta sin nombre",
+            categoria = "Cartas MTG",
+            imagen = carta.imageUrl,
+            descripcion = carta.typeLine,
+            estado = "Nuevo"
+        )
+
+        val listaActual = _carrito.value.toMutableList()
+        val index = listaActual.indexOfFirst { it.producto.id == producto.id }
+
+        if (index != -1) {
+            val item = listaActual[index]
+            val nuevaCantidad = (item.cantidad + cantidad).coerceAtMost(producto.stock)
+            listaActual[index] = item.copy(cantidad = nuevaCantidad)
+        } else {
+            val cantidadFinal = cantidad.coerceAtMost(producto.stock)
+            if (cantidadFinal > 0) {
+                listaActual.add(ItemCarrito(producto, cantidadFinal))
+            }
         }
 
         _carrito.value = listaActual.toList()
