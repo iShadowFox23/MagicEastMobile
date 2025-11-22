@@ -9,9 +9,9 @@ import retrofit2.http.Path
 interface MtgApiService {
     //Listado de cartas
     @GET("cards/search")
-    suspend fun searchCards(
+    suspend fun getCards(
         @Query("q") query: String,
-        @Query("page") page: Int? = null
+        @Query("page") page: Int = 1
     ): ScryfallCardsResponse
     //Carta Single
     @GET("cards/{id}")

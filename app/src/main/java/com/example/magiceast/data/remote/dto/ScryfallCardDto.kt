@@ -3,6 +3,7 @@ package com.example.magiceast.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class ScryfallCardDto(
+
     val id: String? = null,
     val name: String? = null,
 
@@ -12,7 +13,26 @@ data class ScryfallCardDto(
     @SerializedName("type_line")
     val typeLine: String? = null,
 
-    // Algunas cartas tienen varias caras, por ahora nos quedamos con image_uris plano
+    // Imagen para cartas normales
+    @SerializedName("image_uris")
+    val imageUris: ImageUrisDto? = null,
+
+
+    @SerializedName("card_faces")
+    val cardFaces: List<ScryfallCardFaceDto>? = null
+)
+
+
+data class ScryfallCardFaceDto(
+
+    val name: String? = null,
+
+    @SerializedName("mana_cost")
+    val manaCost: String? = null,
+
+    @SerializedName("type_line")
+    val typeLine: String? = null,
+
     @SerializedName("image_uris")
     val imageUris: ImageUrisDto? = null
 )
@@ -22,8 +42,10 @@ data class ImageUrisDto(
     val normal: String? = null,
     val large: String? = null,
     val png: String? = null,
+
     @SerializedName("art_crop")
     val artCrop: String? = null,
+
     @SerializedName("border_crop")
     val borderCrop: String? = null
 )

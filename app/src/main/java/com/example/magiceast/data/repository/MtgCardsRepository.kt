@@ -4,21 +4,31 @@ import com.example.magiceast.data.model.Carta
 import com.example.magiceast.data.model.toDomain
 import com.example.magiceast.data.remote.MtgApiClient
 
-
 class MtgCardsRepository {
 
-    suspend fun getCards(query: String = "game:paper"): Result<List<Carta>> {
-        return runCatching {
-            val response = MtgApiClient.api.searchCards(query = query)
-            response.data
-                .map { it.toDomain() }
-        }
+    suspend fun getPageResponse(query: String, page: Int) = runCatching {
+        MtgApiClient.api.getCards(
+            query = query,
+            page = page
+        )
     }
-    //Obetener por ID
-    suspend fun getCardById(id: String): Result<Carta> {
-        return runCatching {
-            val dto = MtgApiClient.api.getCardById(id)
-            dto.toDomain()
-        }
+
+    /**
+     *  Obtiene todas las cartas
+     */
+    suspend fun getCards(query: String, page: Int) = runCatching {
+        val response = MtgApiClient.api.getCards(
+            query = query,
+            page = page
+        )
+
+        response.data.map { it.toDomain() }
+    }
+
+    /**
+     * Busca una carta por ID
+     */
+    suspend fun getCardById(id: String) = runCatching {
+        MtgApiClient.api.getCardById(id).toDomain()
     }
 }
