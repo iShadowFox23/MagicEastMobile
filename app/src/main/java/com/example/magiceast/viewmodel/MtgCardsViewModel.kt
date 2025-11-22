@@ -28,7 +28,6 @@ class MtgCardsViewModel(
     private var lastQuery = "game:paper"
 
     fun cargarPaginasDisponibles(query: String = "game:paper") {
-        lastQuery = query
 
         uiState = uiState.copy(loading = true, error = null)
 
