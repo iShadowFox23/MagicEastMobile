@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object MtgApiClient {
 
-    private const val BASE_URL = "https://api.magicthegathering.io/v1/"
+    private const val BASE_URL = "https://api.scryfall.com/"
 
     val api: MtgApiService = Retrofit.Builder()
         .baseUrl(BASE_URL)

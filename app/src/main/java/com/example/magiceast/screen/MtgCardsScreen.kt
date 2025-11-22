@@ -22,9 +22,8 @@ fun MtgCardsScreen(
 ) {
     val state = viewModel.uiState
 
-    // Cargar cartas al entrar en la pantalla
     LaunchedEffect(Unit) {
-        viewModel.cargarCards(pageSize = 30)
+        viewModel.cargarCards() // usa la query por defecto "game:paper"
     }
 
     Box(
@@ -34,10 +33,7 @@ fun MtgCardsScreen(
     ) {
         when {
             state.loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Color(0xFF720B0B))
                 }
             }
@@ -50,19 +46,12 @@ fun MtgCardsScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Ocurrió un error:",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Text("Ocurrió un error:", color = Color.White)
                     Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = state.error ?: "",
-                        color = Color.Red
-                    )
+                    Text(state.error ?: "", color = Color.Red)
                     Spacer(Modifier.height(16.dp))
                     Button(
-                        onClick = { viewModel.cargarCards(pageSize = 30) },
+                        onClick = { viewModel.cargarCards() },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B))
                     ) {
                         Text("Reintentar", color = Color.White)
@@ -88,20 +77,16 @@ fun MtgCardsScreen(
                                     .heightIn(min = 80.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                val imageUrl = card.imageUris?.normal
 
-                                // Imagen de la carta (si tiene)
-                                if (!card.imageUrl.isNullOrBlank()) {
+                                if (!imageUrl.isNullOrBlank()) {
                                     Image(
-                                        painter = rememberAsyncImagePainter(card.imageUrl),
+                                        painter = rememberAsyncImagePainter(imageUrl),
                                         contentDescription = card.name,
-                                        modifier = Modifier
-                                            .size(64.dp)
+                                        modifier = Modifier.size(64.dp)
                                     )
                                 } else {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(64.dp),
-                                    )
+                                    Box(modifier = Modifier.size(64.dp))
                                 }
 
                                 Spacer(Modifier.width(12.dp))
@@ -115,7 +100,7 @@ fun MtgCardsScreen(
                                     )
                                     Spacer(Modifier.height(4.dp))
                                     Text(
-                                        text = card.type ?: "",
+                                        text = card.typeLine ?: "",
                                         color = Color.LightGray,
                                         style = MaterialTheme.typography.bodySmall
                                     )

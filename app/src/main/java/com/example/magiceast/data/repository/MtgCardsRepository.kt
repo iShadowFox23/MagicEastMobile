@@ -1,14 +1,14 @@
 package com.example.magiceast.data.repository
 
 import com.example.magiceast.data.remote.MtgApiClient
-import com.example.magiceast.data.remote.dto.MtgCardDto
+import com.example.magiceast.data.remote.dto.ScryfallCardDto
 
 class MtgCardsRepository {
 
-    suspend fun getCards(pageSize: Int = 20): Result<List<MtgCardDto>> {
+    suspend fun getCards(query: String = "game:paper"): Result<List<ScryfallCardDto>> {
         return runCatching {
-            val response = MtgApiClient.api.getCards(pageSize = pageSize)
-            response.cards
+            val response = MtgApiClient.api.searchCards(query = query)
+            response.data
         }
     }
 }
