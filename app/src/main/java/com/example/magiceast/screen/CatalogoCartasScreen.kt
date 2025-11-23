@@ -36,8 +36,11 @@ fun CatalogoCartasScreen(
     val clpFormatter = NumberFormat.getCurrencyInstance(ULocale("es_CL"))
 
     LaunchedEffect(Unit) {
-        viewModel.cargarPaginasDisponibles(query = "game:paper")
+        if (viewModel.uiState.cards.isEmpty()) {
+            viewModel.cargarPaginasDisponibles(query = "game:paper")
+        }
     }
+
 
     Scaffold(
         topBar = {
@@ -111,7 +114,7 @@ fun CatalogoCartasScreen(
                         .padding(padding)
                 ) {
 
-                    // 🔹 Lista de cartas
+                    // Lista de cartas
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f)
