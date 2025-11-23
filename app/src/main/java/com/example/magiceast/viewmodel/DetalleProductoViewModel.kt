@@ -36,3 +36,6 @@ class DetalleProductoViewModel : ViewModel() {
         return producto.stock > 0
     }
 }
+
+
+//Borrar?

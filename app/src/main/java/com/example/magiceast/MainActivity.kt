@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     //Pantalla principal
                     composable("main") {
                         MainScreen(
-                            onGoToCatalogo = { navController.navigate("catalogo") },
+                            onGoToCatalogo = { navController.navigate("catalogoProductos") },
                             onLoginClick = { navController.navigate("login") },
                             onRegisterClick = { navController.navigate("registro") },
                             onCardClick = { navController.navigate("catalogoCartas") }
@@ -146,6 +146,10 @@ class MainActivity : ComponentActivity() {
                             cartaId = id,
                             carritoViewModel = carritoViewModel
                         )
+                    }
+                    //Catalogo Productos
+                    composable("catalogoProductos") {
+                        CatalogoProductosScreen(navController = navController)
                     }
                 }
             }

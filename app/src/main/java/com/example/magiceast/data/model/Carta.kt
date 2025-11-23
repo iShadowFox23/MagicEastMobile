@@ -13,19 +13,16 @@ data class Carta(
     val stock: Int
 )
 
-// 🔹 Conversión del DTO a tu modelo interno de forma segura
+
 fun ScryfallCardDto.toDomain(): Carta {
 
-    // Si la carta es de doble cara, tomamos la cara frontal
+
     val face = cardFaces?.firstOrNull()
 
     val finalName = name ?: face?.name
     val finalManaCost = manaCost ?: face?.manaCost
     val finalTypeLine = typeLine ?: face?.typeLine
 
-    // Imagen final:
-    // 1) Si existe imageUris.normal → úsalo
-    // 2) si no → toma la imagen de la cara frontal
     val finalImage =
         imageUris?.normal
             ?: face?.imageUris?.normal
@@ -38,7 +35,7 @@ fun ScryfallCardDto.toDomain(): Carta {
         manaCost = finalManaCost,
         typeLine = finalTypeLine,
         imageUrl = finalImage,
-        valor = Random.nextInt(from = 500, until = 100_001), // 500 a 100.000 CLP
+        valor = Random.nextInt(from = 500, until = 100_001),
         stock = Random.nextInt(0, 11)
     )
 }

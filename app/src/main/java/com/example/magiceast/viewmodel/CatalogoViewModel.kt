@@ -18,3 +18,5 @@ class CatalogoViewModel : ViewModel() {
     fun buscarProductoPorId(id: Int): Producto? =
         ProductoRepository.obtenerProductoPorId(id)
 }
+
+//Borrar?
