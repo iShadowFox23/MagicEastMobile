@@ -7,6 +7,7 @@ data class ProductoApiDto(
     val categorias: String,
     val precio: Int,
     val stock: Int,
-    val descripcion: String
+    val descripcion: String,
+    val imagen: String?
 
 )
