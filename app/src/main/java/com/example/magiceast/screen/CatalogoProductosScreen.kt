@@ -1,21 +1,23 @@
 package com.example.magiceast.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.magiceast.viewmodel.ProductoApiViewModel
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-
+import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,13 +100,54 @@ fun CatalogoProductosScreen(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
                         ) {
-                            Column(Modifier.padding(12.dp)) {
-                                Text(producto.nombre, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                                Text("Precio: ${producto.precio} CLP", color = Color.LightGray)
-                                Text("Stock: ${producto.stock}", color = Color.Gray)
-                                producto.descripcion?.let {
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(it, color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // Imagen del producto desde assets (si viene ruta)
+                                if (!producto.imagen.isNullOrBlank()) {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(producto.imagen),
+                                        contentDescription = producto.nombre,
+                                        modifier = Modifier
+                                            .size(80.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    // Placeholder si no hay imagen
+                                    Box(
+                                        modifier = Modifier
+                                            .size(80.dp)
+                                            .background(Color.DarkGray)
+                                    )
+                                }
+
+                                Spacer(Modifier.width(12.dp))
+
+                                Column(Modifier.weight(1f)) {
+                                    Text(
+                                        producto.nombre,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        "Precio: ${producto.precio} CLP",
+                                        color = Color.LightGray,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        "Stock: ${producto.stock}",
+                                        color = Color.Gray,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    producto.descripcion?.let {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            it,
+                                            color = Color.Gray,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
                                 }
                             }
                         }
