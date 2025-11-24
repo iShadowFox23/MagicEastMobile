@@ -33,9 +33,29 @@ fun LoginScreen(
 
     val email by viewModel.email
     val password by viewModel.password
+
     val emailError by viewModel.emailError
     val passwordError by viewModel.passwordError
+
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val loginSuccessAdmin by viewModel.loginSuccessAdmin.collectAsState()
+    val loginSuccessUser by viewModel.loginSuccessUser.collectAsState()
+    val loginError by viewModel.loginError.collectAsState()
+
+    // Navegar si es admin
+    LaunchedEffect(loginSuccessAdmin) {
+        if (loginSuccessAdmin) {
+            onLoginAdmin()
+        }
+    }
+
+    // Navegar si es usuario normal
+    LaunchedEffect(loginSuccessUser) {
+        if (loginSuccessUser) {
+            onLoginUser()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -129,16 +149,10 @@ fun LoginScreen(
 
         Spacer(Modifier.height(24.dp))
 
-
+        // Botón de login
         Button(
             onClick = {
-                if (viewModel.validate()) {
-                    if (viewModel.isAdmin()) {
-                        onLoginAdmin()
-                    } else {
-                        onLoginUser()
-                    }
-                }
+                viewModel.login() // <-- Backend + Admin validation
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
             modifier = Modifier
@@ -148,9 +162,20 @@ fun LoginScreen(
             Text("Entrar", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
+        // Mostrar error del servidor o contraseña incorrecta
+        loginError?.let {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = it,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+
         Spacer(Modifier.height(12.dp))
 
-        //Botón de registro
+        // Botón de registro
         Button(
             onClick = onRegister,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
@@ -162,7 +187,6 @@ fun LoginScreen(
         }
 
         Spacer(Modifier.height(16.dp))
-
 
         TextButton(onClick = onBack) {
             Text("Volver al inicio", color = Color.Gray)

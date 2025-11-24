@@ -15,4 +15,14 @@ class UsuarioRepository {
             null
         }
     }
+
+
+    suspend fun obtenerUsuarioPorEmail(email: String): Usuario? {
+        return try {
+            ApiClient.api.obtenerUsuarioPorEmail(email)  // debes crear este endpoint
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }
