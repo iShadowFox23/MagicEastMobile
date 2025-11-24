@@ -3,12 +3,11 @@ package com.example.magiceast.data.model
 import com.example.magiceast.data.remote.dto.ProductoApiDto
 import com.example.magiceast.model.Producto
 
+// Convertir desde backend → app
 fun ProductoApiDto.toDomain(): Producto {
 
-    // imagen: "/images/precons/precon11.jpg"
-    // queremos: "file:///android_asset/images/precons/precon11.jpg"
+    // Convertir ruta de imagen del backend → asset interno
     val assetPath = imagen?.let { raw ->
-        // Por si viene con "/" al inicio:
         val cleaned = if (raw.startsWith("/")) raw.removePrefix("/") else raw
         "file:///android_asset/$cleaned"
     }
@@ -16,13 +15,27 @@ fun ProductoApiDto.toDomain(): Producto {
     return Producto(
         id = id,
         precio = precio,
-        precioAntiguo = precio,
-        descuento = 0,
+        precioAntiguo = precio,     // no existe en backend, se iguala
+        descuento = 0,              // Android lo calcula si quiere
         stock = stock,
         nombre = nombre,
         categoria = categorias,
         imagen = assetPath,
         descripcion = descripcion,
-        estado = "Nuevo"
+        estado = "Nuevo"            // siempre generado en Android
+    )
+}
+
+// Convertir desde app → backend
+fun Producto.toDto(): ProductoApiDto {
+    return ProductoApiDto(
+        id = id,
+        nombre = nombre,
+        marca = "MagicEast",                  // 👈 AHORA SÍ: null válido para Oracle
+        categorias = categoria,
+        precio = precio,
+        stock = stock,
+        descripcion = descripcion ?: "",
+        imagen = imagen                // si es null el backend lo ignora
     )
 }

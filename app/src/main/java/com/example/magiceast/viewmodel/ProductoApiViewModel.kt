@@ -26,20 +26,19 @@ class ProductoApiViewModel(
         uiState = uiState.copy(loading = true, error = null)
 
         viewModelScope.launch {
-            repository.getProductos()
-                .onSuccess { lista ->
-                    uiState = uiState.copy(
-                        loading = false,
-                        productos = lista,
-                        error = null
-                    )
-                }
-                .onFailure { throwable ->
-                    uiState = uiState.copy(
-                        loading = false,
-                        error = throwable.message ?: "Error al cargar productos"
-                    )
-                }
+            try {
+                val lista = repository.listarProductos()
+                uiState = uiState.copy(
+                    loading = false,
+                    productos = lista,
+                    error = null
+                )
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    loading = false,
+                    error = "Error al cargar productos"
+                )
+            }
         }
     }
 }

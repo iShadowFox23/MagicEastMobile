@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,10 +25,11 @@ fun BackOfficeScreen(
     onBack: () -> Unit = {},
     viewModel: AdminViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-    LaunchedEffect(Unit) { viewModel.cargarProductos(context) }
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
 
-    val productos = viewModel.productos
+    val productos by viewModel.productos.collectAsState()
     var productoAEditar by remember { mutableStateOf<Producto?>(null) }
     var mostrarDialogAgregar by remember { mutableStateOf(false) }
 
@@ -50,12 +50,14 @@ fun BackOfficeScreen(
         },
         containerColor = Color(0xFF121212)
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
+
             if (productos.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -76,29 +78,47 @@ fun BackOfficeScreen(
             }
         }
 
+        // DIALOGO EDITAR
         productoAEditar?.let { producto ->
             EditarProductoDialog(
                 producto = producto,
                 onDismiss = { productoAEditar = null },
-                onGuardar = { nuevoNombre, nuevoPrecio ->
-                    viewModel.editarProducto(producto.id, nuevoNombre, nuevoPrecio)
+                onGuardar = { nombre, precio, stock, categoria, descripcion, imagen ->
+                    val actualizado = producto.copy(
+                        nombre = nombre,
+                        precio = precio,
+                        stock = stock,
+                        categoria = categoria,
+                        descripcion = descripcion,
+                        imagen = imagen,
+                        estado = calcularEstado(stock)
+                    )
+                    viewModel.editarProducto(actualizado)
                     productoAEditar = null
                 }
             )
         }
 
+        // DIALOGO AGREGAR
         if (mostrarDialogAgregar) {
             AgregarProductoDialog(
-                productosExistentes = productos,
                 onDismiss = { mostrarDialogAgregar = false },
-                onAgregar = { nuevoProducto ->
-                    viewModel.agregarProducto(nuevoProducto)
+                onAgregar = { nuevo ->
+                    viewModel.agregarProducto(nuevo)
                     mostrarDialogAgregar = false
                 }
             )
         }
     }
 }
+
+fun calcularEstado(stock: Int): String =
+    when {
+        stock == 0 -> "Agotado"
+        stock in 1..4 -> "Bajo Stock"
+        else -> "Disponible"
+    }
+
 
 @Composable
 fun ProductoAdminCard(
@@ -118,42 +138,31 @@ fun ProductoAdminCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+
             Column(
                 modifier = Modifier.weight(1f).padding(end = 8.dp)
             ) {
                 Text(producto.nombre, color = Color.White, style = MaterialTheme.typography.titleMedium)
                 Text("Precio: $${producto.precio}", color = Color.LightGray)
                 Text("Stock: ${producto.stock}", color = Color.Gray)
-                Text(
-                    "Estado: ${producto.estado}",
-                    color = when (producto.estado) {
-                        "Agotado" -> Color.Red
-                        "Bajo Stock" -> Color(0xFFFFC107)
-                        else -> Color(0xFF00E676)
-                    }
-                )
+
+                val estadoColor = when (producto.estado) {
+                    "Agotado" -> Color.Red
+                    "Bajo Stock" -> Color(0xFFFFC107)
+                    else -> Color(0xFF00E676)
+                }
+
+                Text("Estado: ${producto.estado}", color = estadoColor)
             }
 
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.width(96.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onEditar,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(Color(0x33FFFFFF), shape = MaterialTheme.shapes.small)
-                ) {
+                IconButton(onClick = onEditar) {
                     Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color(0xFFFFC107))
                 }
-
-                IconButton(
-                    onClick = onEliminar,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(Color(0x33FFFFFF), shape = MaterialTheme.shapes.small)
-                ) {
+                IconButton(onClick = onEliminar) {
                     Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red)
                 }
             }
@@ -165,17 +174,34 @@ fun ProductoAdminCard(
 fun EditarProductoDialog(
     producto: Producto,
     onDismiss: () -> Unit,
-    onGuardar: (String, Int) -> Unit
+    onGuardar: (
+        nombre: String,
+        precio: Int,
+        stock: Int,
+        categoria: String,
+        descripcion: String?,
+        imagen: String?
+    ) -> Unit
 ) {
     var nombre by remember { mutableStateOf(TextFieldValue(producto.nombre)) }
     var precio by remember { mutableStateOf(TextFieldValue(producto.precio.toString())) }
+    var stock by remember { mutableStateOf(TextFieldValue(producto.stock.toString())) }
+    var categoria by remember { mutableStateOf(producto.categoria) }
+    var descripcion by remember { mutableStateOf(TextFieldValue(producto.descripcion ?: "")) }
+    var imagen by remember { mutableStateOf(TextFieldValue(producto.imagen ?: "")) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = {
-                val nuevoPrecio = precio.text.toIntOrNull() ?: producto.precio
-                onGuardar(nombre.text, nuevoPrecio)
+                onGuardar(
+                    nombre.text,
+                    precio.text.toIntOrNull() ?: producto.precio,
+                    stock.text.toIntOrNull() ?: producto.stock,
+                    categoria,
+                    descripcion.text.ifBlank { null },
+                    imagen.text.ifBlank { null }
+                )
             }) {
                 Text("Guardar", color = Color(0xFF00E676))
             }
@@ -183,20 +209,53 @@ fun EditarProductoDialog(
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) } },
         title = { Text("Editar Producto", color = Color.White) },
         text = {
+
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
                     label = { Text("Nombre", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
+
                 OutlinedTextField(
                     value = precio,
                     onValueChange = { precio = it },
                     label = { Text("Precio", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
+                )
+
+                OutlinedTextField(
+                    value = stock,
+                    onValueChange = { stock = it },
+                    label = { Text("Stock", color = Color.Gray) },
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
+                )
+
+                Text("Categoría", color = Color.Gray)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("Mazo Preconstruido", "Booster Packs").forEach { opcion ->
+                        FilterChip(
+                            selected = categoria == opcion,
+                            onClick = { categoria = opcion },
+                            label = { Text(opcion) }
+                        )
+                    }
+                }
+
+                OutlinedTextField(
+                    value = descripcion,
+                    onValueChange = { descripcion = it },
+                    label = { Text("Descripción (opcional)", color = Color.Gray) },
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
+                )
+
+                OutlinedTextField(
+                    value = imagen,
+                    onValueChange = { imagen = it },
+                    label = { Text("Imagen URL (opcional)", color = Color.Gray) },
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
             }
         },
@@ -206,172 +265,108 @@ fun EditarProductoDialog(
 
 @Composable
 fun AgregarProductoDialog(
-    productosExistentes: List<Producto>,
     onDismiss: () -> Unit,
     onAgregar: (Producto) -> Unit
 ) {
     var nombre by remember { mutableStateOf(TextFieldValue("")) }
-    var precioAntiguo by remember { mutableStateOf(TextFieldValue("")) }
-    var descuento by remember { mutableStateOf(TextFieldValue("")) }
+    var precio by remember { mutableStateOf(TextFieldValue("")) }
     var stock by remember { mutableStateOf(TextFieldValue("")) }
     var categoria by remember { mutableStateOf("Mazo Preconstruido") }
-    var imagen by remember { mutableStateOf(TextFieldValue("")) }
     var descripcion by remember { mutableStateOf(TextFieldValue("")) }
-    var mostrarError by remember { mutableStateOf(false) }
+    var imagen by remember { mutableStateOf(TextFieldValue("")) }
+    var error by remember { mutableStateOf(false) }
 
-    // Estado automático
-    val estado by remember(stock.text) {
-        derivedStateOf {
-            val stockInt = stock.text.toIntOrNull() ?: 0
-            when {
-                stockInt == 0 -> "Agotado"
-                stockInt in 1..4 -> "Bajo Stock"
-                else -> "Disponible"
-            }
-        }
-    }
-
-
-    val precioCalculado by remember(precioAntiguo.text, descuento.text) {
-        derivedStateOf {
-            val precioBase = precioAntiguo.text.toIntOrNull() ?: 0
-            val desc = descuento.text.toIntOrNull() ?: 0
-            if (desc in 1..99) (precioBase * (100 - desc)) / 100 else precioBase
-        }
-    }
-
-    val camposValidos = nombre.text.isNotBlank() &&
-            precioAntiguo.text.toIntOrNull() != null &&
-            stock.text.toIntOrNull() != null &&
-            categoria.isNotBlank()
+    val camposValidos =
+        nombre.text.isNotBlank() &&
+                precio.text.toIntOrNull() != null &&
+                stock.text.toIntOrNull() != null
 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = {
+
                 if (!camposValidos) {
-                    mostrarError = true
+                    error = true
                     return@TextButton
                 }
 
-                val nuevoId = (productosExistentes.maxOfOrNull { it.id } ?: 0) + 1
-
-                val nuevoProducto = Producto(
-                    id = nuevoId,
+                val nuevo = Producto(
+                    id = 0, // backend genera id
                     nombre = nombre.text.trim(),
-                    precio = precioCalculado,
-                    precioAntiguo = precioAntiguo.text.toIntOrNull() ?: 0,
-                    descuento = descuento.text.toIntOrNull() ?: 0,
-                    stock = stock.text.toIntOrNull() ?: 0,
+                    precio = precio.text.toInt(),
+                    precioAntiguo = precio.text.toInt(),
+                    descuento = 0,
+                    stock = stock.text.toInt(),
                     categoria = categoria,
-                    imagen = if (imagen.text.isNotBlank()) imagen.text else null,
                     descripcion = descripcion.text.ifBlank { null },
-                    estado = estado
+                    imagen = imagen.text.ifBlank { null },
+                    estado = calcularEstado(stock.text.toInt())
                 )
-                onAgregar(nuevoProducto)
+
+                onAgregar(nuevo)
+
             }) {
                 Text("Agregar", color = Color(0xFF00E676))
             }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) }
-        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) } },
         title = { Text("Agregar Producto", color = Color.White) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
                     label = { Text("Nombre *", color = Color.Gray) },
-                    isError = mostrarError && nombre.text.isBlank(),
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
+                    isError = error && nombre.text.isBlank(),
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
-                    value = precioAntiguo,
-                    onValueChange = { if (it.text.all { ch -> ch.isDigit() }) precioAntiguo = it },
-                    label = { Text("Precio Antiguo *", color = Color.Gray) },
-                    isError = mostrarError && precioAntiguo.text.toIntOrNull() == null,
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                OutlinedTextField(
-                    value = descuento,
-                    onValueChange = { if (it.text.all { ch -> ch.isDigit() }) descuento = it },
-                    label = { Text("Descuento (%) (opcional)", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Text(
-                    text = "Precio final: $$precioCalculado",
-                    color = Color(0xFF00E676),
-                    style = MaterialTheme.typography.bodyMedium
+                    value = precio,
+                    onValueChange = { precio = it },
+                    label = { Text("Precio *", color = Color.Gray) },
+                    isError = error && precio.text.toIntOrNull() == null,
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = stock,
-                    onValueChange = { if (it.text.all { ch -> ch.isDigit() }) stock = it },
+                    onValueChange = { stock = it },
                     label = { Text("Stock *", color = Color.Gray) },
-                    isError = mostrarError && stock.text.toIntOrNull() == null,
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
+                    isError = error && stock.text.toIntOrNull() == null,
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
-                Text("Categoría *", color = Color.Gray)
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Text("Categoría", color = Color.Gray)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("Mazo Preconstruido", "Booster Packs").forEach { opcion ->
                         FilterChip(
                             selected = categoria == opcion,
                             onClick = { categoria = opcion },
-                            label = { Text(opcion) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                containerColor = Color(0xFF2C2C2C),
-                                selectedContainerColor = Color(0xFF00E676),
-                                labelColor = Color.White,
-                                selectedLabelColor = Color.Black
-                            )
+                            label = { Text(opcion) }
                         )
                     }
                 }
 
                 OutlinedTextField(
-                    value = imagen,
-                    onValueChange = { imagen = it },
-                    label = { Text("URL Imagen (opcional)", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
                     label = { Text("Descripción (opcional)", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
-                Text(
-                    text = "Estado automático: $estado",
-                    color = when (estado) {
-                        "Agotado" -> Color.Red
-                        "Bajo Stock" -> Color(0xFFFFC107)
-                        else -> Color(0xFF00E676)
-                    },
-                    style = MaterialTheme.typography.bodyMedium
+                OutlinedTextField(
+                    value = imagen,
+                    onValueChange = { imagen = it },
+                    label = { Text("Imagen URL (opcional)", color = Color.Gray) },
+                    textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
-                if (mostrarError && !camposValidos) {
-                    Text(
-                        "Por favor completa todos los campos obligatorios.",
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                if (error && !camposValidos) {
+                    Text("Completa los campos obligatorios", color = Color.Red)
                 }
             }
         },
