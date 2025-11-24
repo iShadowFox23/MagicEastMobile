@@ -30,5 +30,6 @@ class UsuarioViewModel(
                 _error.value = "No se pudo registrar el usuario"
             }
         }
+
     }
 }
