@@ -15,27 +15,27 @@ fun ProductoApiDto.toDomain(): Producto {
     return Producto(
         id = id,
         precio = precio,
-        precioAntiguo = precio,     // no existe en backend, se iguala
-        descuento = 0,              // Android lo calcula si quiere
+        precioAntiguo = precio,
+        descuento = 0,
         stock = stock,
         nombre = nombre,
         categoria = categorias,
         imagen = assetPath,
         descripcion = descripcion,
-        estado = "Nuevo"            // siempre generado en Android
+        estado = "Nuevo"
     )
 }
 
-// Convertir desde app → backend
+
 fun Producto.toDto(): ProductoApiDto {
     return ProductoApiDto(
         id = id,
         nombre = nombre,
-        marca = "MagicEast",                  // 👈 AHORA SÍ: null válido para Oracle
+        marca = "MagicEast",
         categorias = categoria,
         precio = precio,
         stock = stock,
         descripcion = descripcion ?: "",
-        imagen = imagen                // si es null el backend lo ignora
+        imagen = imagen
     )
 }

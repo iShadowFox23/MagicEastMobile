@@ -118,24 +118,23 @@ class MainActivity : ComponentActivity() {
                     composable("admin") {
                         MainBackOfficeScreen(
                             onGoToCatalogoAdmin = { navController.navigate("admincatalogo") },
-                            onGoToUsuariosAdmin = { navController.navigate("adminusuarios") }
+                            onGoToUsuariosAdmin = { navController.navigate("adminusuarios") },
+                            onBack = { navController.navigate("main") }
                         )
                     }
 
-                    // NUEVA SCREEN → Gestión de Usuarios
+                    // Gestión de Usuarios
                     composable("adminusuarios") {
-                        GestionUsuariosScreen()
+                        GestionUsuariosScreen(
+                            onBack = { navController.popBackStack() }
+                        )
                     }
 
                     //Back Office (catalogo)
                     composable("admincatalogo") {
                         BackOfficeScreen(
-                            onBack = {
-                                loginViewModel.clearErrors()
-                                navController.navigate("login") {
-                                    popUpTo("main") { inclusive = true }
-                                }
-                            }
+                            onBack = { navController.popBackStack() }
+
                         )
                     }
 

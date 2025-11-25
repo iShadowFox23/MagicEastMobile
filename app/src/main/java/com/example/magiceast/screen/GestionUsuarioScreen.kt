@@ -14,13 +14,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.livedata.observeAsState
-
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import com.example.magiceast.model.Usuario
 import com.example.magiceast.viewmodel.RegistroUsuarioViewModel
+import androidx.navigation.NavController
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GestionUsuariosScreen(
+    onBack: () -> Unit,
     viewModel: RegistroUsuarioViewModel = viewModel()
 ) {
 
@@ -36,6 +39,15 @@ fun GestionUsuariosScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Gestión de Usuarios") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver al inicio",
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF121212),
                     titleContentColor = Color.White

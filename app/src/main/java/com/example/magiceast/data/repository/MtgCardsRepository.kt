@@ -13,9 +13,7 @@ class MtgCardsRepository {
         )
     }
 
-    /**
-     *  Obtiene todas las cartas
-     */
+
     suspend fun getCards(query: String, page: Int) = runCatching {
         val response = MtgApiClient.api.getCards(
             query = query,
@@ -25,9 +23,7 @@ class MtgCardsRepository {
         response.data.map { it.toDomain() }
     }
 
-    /**
-     * Busca una carta por ID
-     */
+
     suspend fun getCardById(id: String) = runCatching {
         MtgApiClient.api.getCardById(id).toDomain()
     }

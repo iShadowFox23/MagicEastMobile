@@ -104,6 +104,11 @@ fun MainBackOfficeScreen(
                 fontWeight = FontWeight.Bold
             )
         }
+        Spacer(Modifier.height(16.dp))
+        //Volver
+        TextButton(onClick = onBack) {
+            Text("Volver al inicio", color = Color.Gray)
+        }
 
         Spacer(modifier = Modifier.height(70.dp))
 

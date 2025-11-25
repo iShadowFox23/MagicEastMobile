@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -18,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.magiceast.model.Producto
 import com.example.magiceast.viewmodel.AdminViewModel
+import androidx.navigation.NavController
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +44,16 @@ fun BackOfficeScreen(
                     containerColor = Color(0xFF121212),
                     titleContentColor = Color.White
                 ),
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver al inicio",
+                            tint = Color.White
+                        )
+                    }
+                }
+                ,
                 actions = {
                     IconButton(onClick = { mostrarDialogAgregar = true }) {
                         Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)

@@ -58,7 +58,7 @@ class LoginViewModel(
         return valid
     }
 
-    /** LOGIN REAL **/
+
     fun login() {
         if (!validate()) return
 
