@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class UsuarioViewModel(
+class RegistroViewModel(
     private val repository: UsuarioRepository = UsuarioRepository()
 ) : ViewModel() {
 

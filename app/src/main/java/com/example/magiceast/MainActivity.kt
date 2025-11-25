@@ -117,8 +117,14 @@ class MainActivity : ComponentActivity() {
                     //Back Office (main)
                     composable("admin") {
                         MainBackOfficeScreen(
-                            onGoToCatalogoAdmin = { navController.navigate("admincatalogo") }
+                            onGoToCatalogoAdmin = { navController.navigate("admincatalogo") },
+                            onGoToUsuariosAdmin = { navController.navigate("adminusuarios") }
                         )
+                    }
+
+                    // NUEVA SCREEN → Gestión de Usuarios
+                    composable("adminusuarios") {
+                        GestionUsuariosScreen()
                     }
 
                     //Back Office (catalogo)

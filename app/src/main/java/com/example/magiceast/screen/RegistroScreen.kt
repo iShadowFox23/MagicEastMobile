@@ -19,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.magiceast.data.remote.dto.UsuarioApiDto
-import com.example.magiceast.viewmodel.UsuarioViewModel
+import com.example.magiceast.viewmodel.RegistroViewModel
 
 @Composable
 fun RegistroScreen(
     onBack: () -> Unit = {},
     onRegisterSuccess: () -> Unit = {}
 ) {
-    val viewModel: UsuarioViewModel = viewModel()
+    val viewModel: RegistroViewModel = viewModel()
 
     // Estados locales para inputs
     var nombre by remember { mutableStateOf("") }

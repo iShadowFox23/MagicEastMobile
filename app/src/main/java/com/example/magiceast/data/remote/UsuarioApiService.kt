@@ -3,12 +3,9 @@ package com.example.magiceast.data.remote
 import com.example.magiceast.data.remote.dto.UsuarioApiDto
 import com.example.magiceast.model.Usuario
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
-interface ApiService {
+interface UsuarioApiService {
 
     @POST("usuarios")
     suspend fun registrarUsuario(@Body usuario: UsuarioApiDto): Response<Usuario>
@@ -16,4 +13,9 @@ interface ApiService {
     @GET("usuarios/{email}")
     suspend fun obtenerUsuarioPorEmail(@Path("email") email: String): Usuario
 
+    @GET("usuarios")
+    suspend fun listarUsuarios(): List<Usuario>
+
+    @DELETE("usuarios/{id}")
+    suspend fun eliminarUsuario(@Path("id") id: Long): Response<Unit>
 }
