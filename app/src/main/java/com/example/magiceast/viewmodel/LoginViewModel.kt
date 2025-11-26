@@ -19,13 +19,13 @@ class LoginViewModel(
     var passwordError = mutableStateOf<String?>(null)
 
     private val _loginSuccessUser = MutableStateFlow(false)
-    val loginSuccessUser: StateFlow<Boolean> get() = _loginSuccessUser
+    val loginSuccessUser: StateFlow<Boolean> = _loginSuccessUser
 
     private val _loginSuccessAdmin = MutableStateFlow(false)
-    val loginSuccessAdmin: StateFlow<Boolean> get() = _loginSuccessAdmin
+    val loginSuccessAdmin: StateFlow<Boolean> = _loginSuccessAdmin
 
     private val _loginError = MutableStateFlow<String?>(null)
-    val loginError: StateFlow<String?> get() = _loginError
+    val loginError: StateFlow<String?> = _loginError
 
     private val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\$")
     private val passwordRegex =
@@ -58,7 +58,6 @@ class LoginViewModel(
         return valid
     }
 
-
     fun login() {
         if (!validate()) return
 
@@ -88,11 +87,5 @@ class LoginViewModel(
                 _loginError.value = "Error al conectar con el servidor"
             }
         }
-    }
-
-    fun clearErrors() {
-        emailError.value = null
-        passwordError.value = null
-        _loginError.value = null
     }
 }

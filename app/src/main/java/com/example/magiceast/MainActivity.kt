@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             onBack = { navController.popBackStack() },
                             onLoginAdmin = { navController.navigate("admin") },
-                            onLoginUser = { navController.navigate("catalogo") },
+                            onLoginUser = { navController.navigate("catalogoProductos") },
                             onRegister = { navController.navigate("registro") }
                         )
                     }

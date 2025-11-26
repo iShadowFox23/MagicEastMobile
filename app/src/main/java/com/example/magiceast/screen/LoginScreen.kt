@@ -152,7 +152,7 @@ fun LoginScreen(
         // Botón de login
         Button(
             onClick = {
-                viewModel.login() // <-- Backend + Admin validation
+                viewModel.login()  // <-- usa el backend real
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
             modifier = Modifier
@@ -162,7 +162,7 @@ fun LoginScreen(
             Text("Entrar", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
-        // Mostrar error del servidor o contraseña incorrecta
+        // Mostrar error del servidor o password incorrecta
         loginError?.let {
             Spacer(Modifier.height(12.dp))
             Text(
