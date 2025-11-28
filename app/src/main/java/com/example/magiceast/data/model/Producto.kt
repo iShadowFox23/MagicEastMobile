@@ -11,7 +11,7 @@ private const val BASE_IMAGE_URL = "http://3.135.235.62:8080/api/productos/image
 fun ProductoApiDto.toDomain(): Producto {
 
 
-    val imagenCompleta = imagen?.let { fileName ->
+    var imagenCompleta = imagen?.let { fileName ->
         if (fileName.startsWith("http")) fileName
         else BASE_IMAGE_URL + fileName
     }

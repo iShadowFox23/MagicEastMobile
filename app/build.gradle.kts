@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
+    id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
 android {
@@ -67,6 +68,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.21")
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -87,4 +92,32 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil:2.5.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
+}
+
+kover {
+    reports {
+        // Filtros comunes para todos los reportes
+        filters {
+            excludes {
+                classes(
+                    "com.example.magiceast.screen.*",
+                    "com.example.magiceast.ui.theme.*",
+                    "com.example.magiceast.data.remote.*",
+                    "com.example.magiceast.data.remote.dto.*"
+                )
+            }
+        }
+
+        // Configuración del reporte "total" (todas las variantes)
+        total {
+            xml {
+                // Hacer que falle el check si la cobertura no cumple las reglas
+                onCheck = true
+            }
+            html {
+                // Carpeta de salida del reporte HTML
+                htmlDir.set(layout.buildDirectory.dir("kover-report/html"))
+            }
+        }
+    }
 }
