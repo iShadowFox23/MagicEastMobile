@@ -4,7 +4,8 @@ import com.example.magiceast.data.remote.dto.ProductoApiDto
 import com.example.magiceast.model.Producto
 
 
-private const val BASE_IMAGE_URL = "http://10.0.2.2:8080/api/productos/imagenes/"
+private const val BASE_IMAGE_URL = "http://3.135.235.62:8080/api/productos/imagenes/"
+
 
 
 fun ProductoApiDto.toDomain(): Producto {
