@@ -1,5 +1,7 @@
 package com.example.magiceast.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.magiceast.data.repository.ProductoApiRepository
@@ -22,8 +24,7 @@ class AdminViewModel(
     fun cargarProductos() {
         viewModelScope.launch {
             try {
-                val lista = repository.listarProductos()
-                _productos.value = lista
+                _productos.value = repository.listarProductos()
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = "Error cargando productos"
@@ -32,18 +33,21 @@ class AdminViewModel(
     }
 
 
-    fun agregarProducto(producto: Producto) {
+    fun agregarProducto(context: Context, producto: Producto, uri: Uri?) {
         viewModelScope.launch {
-            val creado = repository.crearProducto(producto)
-            if (creado != null) {
-                _productos.value = _productos.value + creado
-                _error.value = null
-            } else {
-                _error.value = "No se pudo crear el producto"
+            try {
+                val creado = repository.crearProductoConImagen(context, producto, uri)
+
+                if (creado != null) {
+                    _productos.value = _productos.value + creado
+                } else {
+                    _error.value = "No se pudo crear el producto"
+                }
+            } catch (e: Exception) {
+                _error.value = "Error al subir la imagen"
             }
         }
     }
-
 
     fun editarProducto(producto: Producto) {
         viewModelScope.launch {
@@ -52,22 +56,19 @@ class AdminViewModel(
                 _productos.value = _productos.value.map {
                     if (it.id == actualizado.id) actualizado else it
                 }
-                _error.value = null
             } else {
-                _error.value = "No se pudo actualizar el producto"
+                _error.value = "No se pudo actualizar"
             }
         }
     }
-
 
     fun eliminarProducto(id: Int) {
         viewModelScope.launch {
             val eliminado = repository.eliminarProducto(id)
             if (eliminado) {
                 _productos.value = _productos.value.filter { it.id != id }
-                _error.value = null
             } else {
-                _error.value = "No se pudo eliminar el producto"
+                _error.value = "No se pudo eliminar"
             }
         }
     }

@@ -1,5 +1,9 @@
 package com.example.magiceast.screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,13 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.magiceast.model.Producto
 import com.example.magiceast.viewmodel.AdminViewModel
-import androidx.navigation.NavController
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,6 +32,8 @@ fun BackOfficeScreen(
     onBack: () -> Unit = {},
     viewModel: AdminViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.cargarProductos()
     }
@@ -48,12 +54,11 @@ fun BackOfficeScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver al inicio",
+                            contentDescription = "Volver",
                             tint = Color.White
                         )
                     }
-                }
-                ,
+                },
                 actions = {
                     IconButton(onClick = { mostrarDialogAgregar = true }) {
                         Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
@@ -76,7 +81,7 @@ fun BackOfficeScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No hay productos disponibles", color = Color.White)
+                    Text("No hay productos", color = Color.White)
                 }
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -91,7 +96,7 @@ fun BackOfficeScreen(
             }
         }
 
-        // DIALOGO EDITAR
+        //Editar
         productoAEditar?.let { producto ->
             EditarProductoDialog(
                 producto = producto,
@@ -112,12 +117,12 @@ fun BackOfficeScreen(
             )
         }
 
-        // DIALOGO AGREGAR
+        //Agregar
         if (mostrarDialogAgregar) {
             AgregarProductoDialog(
                 onDismiss = { mostrarDialogAgregar = false },
-                onAgregar = { nuevo ->
-                    viewModel.agregarProducto(nuevo)
+                onAgregar = { nuevoProducto, imagenUri ->
+                    viewModel.agregarProducto(context, nuevoProducto, imagenUri)
                     mostrarDialogAgregar = false
                 }
             )
@@ -132,7 +137,6 @@ fun calcularEstado(stock: Int): String =
         else -> "Disponible"
     }
 
-
 @Composable
 fun ProductoAdminCard(
     producto: Producto,
@@ -142,47 +146,33 @@ fun ProductoAdminCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(12.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column(
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
-            ) {
-                Text(producto.nombre, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                Text("Precio: $${producto.precio}", color = Color.LightGray)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(producto.nombre, color = Color.White)
+                Text("Precio: ${producto.precio}", color = Color.LightGray)
                 Text("Stock: ${producto.stock}", color = Color.Gray)
-
-                val estadoColor = when (producto.estado) {
-                    "Agotado" -> Color.Red
-                    "Bajo Stock" -> Color(0xFFFFC107)
-                    else -> Color(0xFF00E676)
-                }
-
-                Text("Estado: ${producto.estado}", color = estadoColor)
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row {
                 IconButton(onClick = onEditar) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color(0xFFFFC107))
+                    Icon(Icons.Default.Edit, contentDescription = null, tint = Color.Yellow)
                 }
                 IconButton(onClick = onEliminar) {
-                    Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red)
+                    Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red)
                 }
             }
         }
     }
 }
-
 @Composable
 fun EditarProductoDialog(
     producto: Producto,
@@ -219,30 +209,33 @@ fun EditarProductoDialog(
                 Text("Guardar", color = Color(0xFF00E676))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) } },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar", color = Color.Gray)
+            }
+        },
         title = { Text("Editar Producto", color = Color.White) },
         text = {
-
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre", color = Color.Gray) },
+                    label = { Text("Nombre") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = precio,
                     onValueChange = { precio = it },
-                    label = { Text("Precio", color = Color.Gray) },
+                    label = { Text("Precio") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = stock,
                     onValueChange = { stock = it },
-                    label = { Text("Stock", color = Color.Gray) },
+                    label = { Text("Stock") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
@@ -260,14 +253,14 @@ fun EditarProductoDialog(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    label = { Text("Descripción (opcional)", color = Color.Gray) },
+                    label = { Text("Descripción") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = imagen,
                     onValueChange = { imagen = it },
-                    label = { Text("Imagen URL (opcional)", color = Color.Gray) },
+                    label = { Text("Imagen (solo lectura)") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
             }
@@ -276,26 +269,35 @@ fun EditarProductoDialog(
     )
 }
 
+
+
 @Composable
 fun AgregarProductoDialog(
     onDismiss: () -> Unit,
-    onAgregar: (Producto) -> Unit
+    onAgregar: (Producto, Uri?) -> Unit
 ) {
     var nombre by remember { mutableStateOf(TextFieldValue("")) }
     var precio by remember { mutableStateOf(TextFieldValue("")) }
     var stock by remember { mutableStateOf(TextFieldValue("")) }
     var categoria by remember { mutableStateOf("Mazo Preconstruido") }
     var descripcion by remember { mutableStateOf(TextFieldValue("")) }
-    var imagen by remember { mutableStateOf(TextFieldValue("")) }
     var error by remember { mutableStateOf(false) }
+
+    // Imagen
+    var imagenUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri -> imagenUri = uri }
 
     val camposValidos =
         nombre.text.isNotBlank() &&
                 precio.text.toIntOrNull() != null &&
-                stock.text.toIntOrNull() != null
+                stock.text.toIntOrNull() != null &&
+                imagenUri != null
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        title = { Text("Agregar Producto", color = Color.White) },
         confirmButton = {
             TextButton(onClick = {
 
@@ -305,7 +307,7 @@ fun AgregarProductoDialog(
                 }
 
                 val nuevo = Producto(
-                    id = 0, // backend genera id
+                    id = 0,
                     nombre = nombre.text.trim(),
                     precio = precio.text.toInt(),
                     precioAntiguo = precio.text.toInt(),
@@ -313,48 +315,45 @@ fun AgregarProductoDialog(
                     stock = stock.text.toInt(),
                     categoria = categoria,
                     descripcion = descripcion.text.ifBlank { null },
-                    imagen = imagen.text.ifBlank { null },
+                    imagen = null,
                     estado = calcularEstado(stock.text.toInt())
                 )
 
-                onAgregar(nuevo)
+                onAgregar(nuevo, imagenUri)
 
             }) {
                 Text("Agregar", color = Color(0xFF00E676))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) } },
-        title = { Text("Agregar Producto", color = Color.White) },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar", color = Color.Gray) }
+        },
         text = {
-
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre *", color = Color.Gray) },
-                    isError = error && nombre.text.isBlank(),
+                    label = { Text("Nombre *") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = precio,
                     onValueChange = { precio = it },
-                    label = { Text("Precio *", color = Color.Gray) },
-                    isError = error && precio.text.toIntOrNull() == null,
+                    label = { Text("Precio *") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 OutlinedTextField(
                     value = stock,
                     onValueChange = { stock = it },
-                    label = { Text("Stock *", color = Color.Gray) },
-                    isError = error && stock.text.toIntOrNull() == null,
+                    label = { Text("Stock *") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
                 Text("Categoría", color = Color.Gray)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row {
                     listOf("Mazo Preconstruido", "Booster Packs").forEach { opcion ->
                         FilterChip(
                             selected = categoria == opcion,
@@ -367,19 +366,25 @@ fun AgregarProductoDialog(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    label = { Text("Descripción (opcional)", color = Color.Gray) },
+                    label = { Text("Descripción") },
                     textStyle = LocalTextStyle.current.copy(color = Color.White)
                 )
 
-                OutlinedTextField(
-                    value = imagen,
-                    onValueChange = { imagen = it },
-                    label = { Text("Imagen URL (opcional)", color = Color.Gray) },
-                    textStyle = LocalTextStyle.current.copy(color = Color.White)
-                )
+                // Seleccionar imagen
+                Button(onClick = { launcher.launch("image/*") }) {
+                    Text("Seleccionar Imagen")
+                }
+
+                imagenUri?.let {
+                    Image(
+                        painter = rememberAsyncImagePainter(it),
+                        contentDescription = null,
+                        modifier = Modifier.size(120.dp)
+                    )
+                }
 
                 if (error && !camposValidos) {
-                    Text("Completa los campos obligatorios", color = Color.Red)
+                    Text("Completa todos los campos", color = Color.Red)
                 }
             }
         },
