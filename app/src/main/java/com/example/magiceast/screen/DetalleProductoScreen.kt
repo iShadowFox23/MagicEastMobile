@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,24 +18,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.magiceast.viewmodel.CatalogoViewModel
 import com.example.magiceast.viewmodel.CarritoViewModel
 import com.example.magiceast.viewmodel.DetalleProductoViewModel
+import com.example.magiceast.viewmodel.ProductoApiViewModel
+import com.example.magiceast.model.Producto
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleProductoScreen(
     productoId: Int,
-    viewModel: CatalogoViewModel,
+    navController: NavController,
+    viewModel: ProductoApiViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     carritoViewModel: CarritoViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     detalleViewModel: DetalleProductoViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val producto = remember { viewModel.buscarProductoPorId(productoId) }
-    val snackbarHostState = remember { SnackbarHostState() }
+    val state = viewModel.uiState
+    val producto = state.productos.find { it.id == productoId }
 
+    val snackbarHostState = remember { SnackbarHostState() }
     val cantidad by detalleViewModel.cantidad
     val mensajeSnack by detalleViewModel.mensajeSnack
-
 
     LaunchedEffect(mensajeSnack) {
         mensajeSnack?.let {
@@ -46,6 +51,15 @@ fun DetalleProductoScreen(
         topBar = {
             TopAppBar(
                 title = { Text(producto?.nombre ?: "Detalle") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF121212),
                     titleContentColor = Color.White
@@ -73,9 +87,8 @@ fun DetalleProductoScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Imagen
                     Image(
-                        painter = rememberAsyncImagePainter(p.imagen),
+                        painter = rememberAsyncImagePainter(p.imagenUrl),
                         contentDescription = p.nombre,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -92,7 +105,6 @@ fun DetalleProductoScreen(
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    //Stock
                     if (p.stock > 0) {
                         Text("Stock disponible: ${p.stock}", color = Color.LightGray)
                     } else {
@@ -109,7 +121,6 @@ fun DetalleProductoScreen(
 
                     Spacer(Modifier.height(12.dp))
 
-                    //Selector de cantidad
                     if (p.stock > 0) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

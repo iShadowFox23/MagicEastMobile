@@ -24,6 +24,7 @@ import com.example.magiceast.model.Producto
 import com.example.magiceast.viewmodel.CatalogoViewModel
 import java.util.Locale
 
+//ANTIGUO
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogoScreen(navController: NavController, viewModel: CatalogoViewModel) {

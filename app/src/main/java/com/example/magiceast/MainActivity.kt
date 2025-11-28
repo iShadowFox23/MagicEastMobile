@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
             val carritoViewModel = remember { CarritoViewModel() }
             val loginViewModel = remember { LoginViewModel() }
 
+
             Surface(color = MaterialTheme.colorScheme.background) {
                 NavHost(
                     navController = navController,
@@ -44,27 +45,6 @@ class MainActivity : ComponentActivity() {
                             onLoginAdmin = { navController.navigate("admin") },
                             onLoginUser = { navController.navigate("catalogoProductos") },
                             onRegister = { navController.navigate("registro") }
-                        )
-                    }
-
-                    // Catálogo de productos
-                    composable("catalogo") {
-                        CatalogoScreen(
-                            navController = navController,
-                            viewModel = catalogoViewModel
-                        )
-                    }
-
-                    //Detalle del producto
-                    composable("detalle/{productoId}") { backStackEntry ->
-                        val id = backStackEntry.arguments
-                            ?.getString("productoId")
-                            ?.toIntOrNull() ?: -1
-
-                        DetalleProductoScreen(
-                            productoId = id,
-                            viewModel = catalogoViewModel,
-                            carritoViewModel = carritoViewModel
                         )
                     }
 
@@ -155,6 +135,22 @@ class MainActivity : ComponentActivity() {
                     //Catalogo Productos
                     composable("catalogoProductos") {
                         CatalogoProductosScreen(navController = navController)
+                    }
+
+                    //Detalle del producto
+                    composable("detalle/{productoId}") { backStackEntry ->
+                        val id = backStackEntry.arguments
+                            ?.getString("productoId")
+                            ?.toIntOrNull() ?: -1
+
+                        val productoApiViewModel = remember { ProductoApiViewModel() }
+
+                        DetalleProductoScreen(
+                            productoId = id,
+                            navController = navController,
+                            viewModel = productoApiViewModel,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
                 }
             }

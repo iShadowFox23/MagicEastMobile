@@ -22,6 +22,10 @@ class ProductoApiViewModel(
     var uiState by mutableStateOf(ProductoApiUiState())
         private set
 
+    init {
+        cargarProductos()
+    }
+
     fun cargarProductos() {
         uiState = uiState.copy(loading = true, error = null)
 

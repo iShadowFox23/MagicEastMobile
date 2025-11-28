@@ -2,6 +2,7 @@ package com.example.magiceast.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -107,7 +108,12 @@ fun CatalogoProductosScreen(
                     items(state.productos) { producto ->
 
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                        navController.navigate("detalle/${producto.id}")
+
+                                },
                             colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
                         ) {
                             Row(
