@@ -1,5 +1,7 @@
 package com.example.magiceast.model
 
+import com.example.magiceast.util.Constants
+
 data class Producto(
     val id: Int,
     val precio: Int,
@@ -11,4 +13,11 @@ data class Producto(
     val imagen: String?,
     val descripcion: String?,
     val estado: String
-)
+) {
+
+    val imagenUrl: String?
+        get() = imagen?.let { name ->
+            if (name.startsWith("http")) name
+            else Constants.IMAGENES_URL + name
+        }
+}

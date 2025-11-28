@@ -19,7 +19,6 @@ class AdminViewModel(
     val error: StateFlow<String?> get() = _error
 
 
-    // 🔹 Cargar productos desde backend
     fun cargarProductos() {
         viewModelScope.launch {
             try {
@@ -32,7 +31,7 @@ class AdminViewModel(
         }
     }
 
-    // 🔹 Agregar producto (POST al backend)
+
     fun agregarProducto(producto: Producto) {
         viewModelScope.launch {
             val creado = repository.crearProducto(producto)
@@ -45,7 +44,7 @@ class AdminViewModel(
         }
     }
 
-    // 🔹 Editar producto (PUT al backend)
+
     fun editarProducto(producto: Producto) {
         viewModelScope.launch {
             val actualizado = repository.actualizarProducto(producto)
@@ -60,7 +59,7 @@ class AdminViewModel(
         }
     }
 
-    // 🔹 Eliminar producto (DELETE al backend)
+
     fun eliminarProducto(id: Int) {
         viewModelScope.launch {
             val eliminado = repository.eliminarProducto(id)
