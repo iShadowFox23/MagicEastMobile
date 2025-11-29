@@ -174,7 +174,7 @@ fun CatalogoCartasScreen(
                         }
                     }
 
-                    // 🔹 Paginación dinámica tipo ventana
+                    //
                     PaginationSection(
                         totalPages = state.pages,
                         currentPage = state.currentPage,

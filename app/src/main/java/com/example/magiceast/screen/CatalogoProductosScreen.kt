@@ -20,6 +20,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.magiceast.viewmodel.ProductoApiViewModel
 import coil.compose.rememberAsyncImagePainter
+import android.icu.text.NumberFormat
+import android.icu.util.ULocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,6 +30,9 @@ fun CatalogoProductosScreen(
     viewModel: ProductoApiViewModel = viewModel()
 ) {
     val state = viewModel.uiState
+    val clpFormatter = remember {
+        NumberFormat.getCurrencyInstance(ULocale("es_CL"))
+    }
 
     LaunchedEffect(Unit) {
         viewModel.cargarProductos()
@@ -147,7 +152,7 @@ fun CatalogoProductosScreen(
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                     Text(
-                                        "Precio: ${producto.precio} CLP",
+                                        "Precio: ${clpFormatter.format(producto.precio)}",
                                         color = Color.LightGray,
                                         style = MaterialTheme.typography.bodyMedium
                                     )

@@ -23,6 +23,8 @@ import com.example.magiceast.viewmodel.DetalleProductoViewModel
 import com.example.magiceast.viewmodel.ProductoApiViewModel
 import com.example.magiceast.model.Producto
 import androidx.navigation.NavController
+import android.icu.text.NumberFormat
+import android.icu.util.ULocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +41,9 @@ fun DetalleProductoScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val cantidad by detalleViewModel.cantidad
     val mensajeSnack by detalleViewModel.mensajeSnack
+    val clpFormatter = remember {
+        NumberFormat.getCurrencyInstance(ULocale("es_CL"))
+    }
 
     LaunchedEffect(mensajeSnack) {
         mensajeSnack?.let {
@@ -99,10 +104,9 @@ fun DetalleProductoScreen(
 
                     Text(p.nombre, style = MaterialTheme.typography.titleLarge, color = Color.White)
                     Text(
-                        "$${p.precio}",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color(0xFF00E676),
-                        fontWeight = FontWeight.SemiBold
+                        "Precio: ${clpFormatter.format(producto.precio)}",
+                        color = Color.LightGray,
+                        style = MaterialTheme.typography.bodyMedium
                     )
 
                     if (p.stock > 0) {
