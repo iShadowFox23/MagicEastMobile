@@ -224,7 +224,7 @@ fun CheckoutScreen(
                 Button(
                     onClick = {
                         if (envioSeleccionado.first == "Estándar (3-5 días)") {
-                            // 🔥 COMPRA REAL AQUÍ
+
                             loading = true
                             carritoViewModel.confirmarCompra(
                                 onSuccess = {
