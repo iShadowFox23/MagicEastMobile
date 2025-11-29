@@ -1,24 +1,20 @@
-
 package com.example.magiceast.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.magiceast.viewmodel.CarritoViewModel
 import java.text.NumberFormat
 import java.util.Locale
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.Icons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,17 +25,12 @@ fun CheckoutScreen(
 ) {
     val carrito by carritoViewModel.carrito.collectAsState()
     val total = carrito.sumOf { it.producto.precio * it.cantidad }
-
     val opcionesEnvio = listOf("Estándar (3-5 días)" to 5000, "Express (1-2 días)" to 10000)
     var envioSeleccionado by remember { mutableStateOf(opcionesEnvio[0]) }
-
     val totalConEnvio = total + envioSeleccionado.second
-
-
     var loading by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf<String?>(null) }
     var compraExitosa by remember { mutableStateOf(false) }
-
 
     if (compraExitosa) {
         AlertDialog(
@@ -48,7 +39,9 @@ fun CheckoutScreen(
                 TextButton(onClick = {
                     compraExitosa = false
                     onPurchaseComplete(true)
-                    navController.popBackStack()  // regresa al home o carrito
+                    navController.navigate("main") {
+                        popUpTo("main") { inclusive = false }
+                    }
                 }) {
                     Text("Aceptar")
                 }
@@ -57,7 +50,6 @@ fun CheckoutScreen(
             text = { Text("Tu compra ha sido procesada con éxito.") }
         )
     }
-
 
     mensajeError?.let { error ->
         AlertDialog(
@@ -97,7 +89,8 @@ fun CheckoutScreen(
         ) {
 
             item {
-                Text("Resumen del Pedido",
+                Text(
+                    "Resumen del Pedido",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -125,17 +118,17 @@ fun CheckoutScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Subtotal", color = Color.White, fontWeight = FontWeight.Bold)
-                            Text("$${formatPrice(total)}", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text("Subtotal", color = Color.White)
+                            Text("$${formatPrice(total)}", color = Color.White)
                         }
                     }
                 }
             }
 
-
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Información de Envío",
+                Text(
+                    "Información de Envío",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -153,10 +146,10 @@ fun CheckoutScreen(
                 }
             }
 
-
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Método de Envío",
+                Text(
+                    "Método de Envío",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -182,7 +175,8 @@ fun CheckoutScreen(
                                 )
                                 Column {
                                     Text(opcion.first, color = Color.White)
-                                    Text("$${formatPrice(opcion.second)}",
+                                    Text(
+                                        "$${formatPrice(opcion.second)}",
                                         color = Color.Gray,
                                         style = MaterialTheme.typography.bodySmall
                                     )
@@ -192,7 +186,6 @@ fun CheckoutScreen(
                     }
                 }
             }
-
 
             item {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -206,25 +199,21 @@ fun CheckoutScreen(
                     Text(
                         "Total Final:",
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+                        color = Color.White
                     )
                     Text(
                         "$${formatPrice(totalConEnvio)}",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = Color(0xFF00E676),
-                        fontWeight = FontWeight.Bold
+                        color = Color(0xFF00E676)
                     )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-
             item {
                 Button(
                     onClick = {
                         if (envioSeleccionado.first == "Estándar (3-5 días)") {
-
                             loading = true
                             carritoViewModel.confirmarCompra(
                                 onSuccess = {
@@ -238,7 +227,6 @@ fun CheckoutScreen(
                                 }
                             )
                         } else {
-
                             mensajeError = "Error al procesar el envío express."
                             onPurchaseComplete(false)
                         }
@@ -252,13 +240,25 @@ fun CheckoutScreen(
                     if (loading) {
                         CircularProgressIndicator(color = Color.White)
                     } else {
-                        Text(
-                            "Pagar",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        Text("Pagar", color = Color.White)
                     }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = {
+                        navController.navigate("main") {
+                            popUpTo("main") { inclusive = false }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Volver al Inicio", color = Color.White)
                 }
             }
         }
