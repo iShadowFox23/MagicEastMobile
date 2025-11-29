@@ -1,10 +1,15 @@
 package com.example.magiceast.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.magiceast.model.Producto
 import com.example.magiceast.data.model.Carta
+import com.example.magiceast.network.RetrofitInstance
+import com.example.magiceast.network.CompraDTO
+import com.example.magiceast.network.ItemCompraDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class ItemCarrito(val producto: Producto, val cantidad: Int = 1)
 
@@ -31,7 +36,6 @@ class CarritoViewModel : ViewModel() {
 
     fun agregarCartaAlCarrito(carta: Carta, cantidad: Int) {
 
-        // Conversion de carta a un Producto
         val producto = Producto(
             id = carta.id?.hashCode() ?: carta.hashCode(),
             precio = carta.valor,
@@ -96,5 +100,39 @@ class CarritoViewModel : ViewModel() {
 
     fun limpiarCarrito() {
         _carrito.value = emptyList()
+    }
+
+    // -------------------------------------------------------
+    // NUEVO: Confirmar compra y enviar al backend
+    // -------------------------------------------------------
+    fun confirmarCompra(
+        onSuccess: () -> Unit = {},
+        onError: (String) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+
+            try {
+                val itemsDTO = _carrito.value.map {
+                    ItemCompraDTO(
+                        productoId = it.producto.id.toLong(),
+                        cantidad = it.cantidad
+                    )
+                }
+
+                val compraDTO = CompraDTO(items = itemsDTO)
+
+                val response = RetrofitInstance.api.procesarCompra(compraDTO)
+
+                if (response.isSuccessful) {
+                    limpiarCarrito()
+                    onSuccess()
+                } else {
+                    onError("Error en el backend: ${response.code()}")
+                }
+
+            } catch (e: Exception) {
+                onError("No se pudo procesar la compra: ${e.message}")
+            }
+        }
     }
 }

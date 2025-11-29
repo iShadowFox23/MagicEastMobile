@@ -30,11 +30,47 @@ fun CheckoutScreen(
     val carrito by carritoViewModel.carrito.collectAsState()
     val total = carrito.sumOf { it.producto.precio * it.cantidad }
 
-
     val opcionesEnvio = listOf("Estándar (3-5 días)" to 5000, "Express (1-2 días)" to 10000)
     var envioSeleccionado by remember { mutableStateOf(opcionesEnvio[0]) }
 
     val totalConEnvio = total + envioSeleccionado.second
+
+
+    var loading by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf<String?>(null) }
+    var compraExitosa by remember { mutableStateOf(false) }
+
+
+    if (compraExitosa) {
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(onClick = {
+                    compraExitosa = false
+                    onPurchaseComplete(true)
+                    navController.popBackStack()  // regresa al home o carrito
+                }) {
+                    Text("Aceptar")
+                }
+            },
+            title = { Text("Compra realizada") },
+            text = { Text("Tu compra ha sido procesada con éxito.") }
+        )
+    }
+
+
+    mensajeError?.let { error ->
+        AlertDialog(
+            onDismissRequest = { mensajeError = null },
+            confirmButton = {
+                TextButton(onClick = { mensajeError = null }) {
+                    Text("Aceptar")
+                }
+            },
+            title = { Text("Error en la compra") },
+            text = { Text(error) }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -53,14 +89,20 @@ fun CheckoutScreen(
         },
         containerColor = Color(0xFF121212)
     ) { padding ->
+
         LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            // Resumen del Pedido
+
             item {
-                Text("Resumen del Pedido", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Resumen del Pedido",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
@@ -75,7 +117,10 @@ fun CheckoutScreen(
                                 Text("$${formatPrice(item.producto.precio * item.cantidad)}", color = Color.LightGray)
                             }
                         }
-                        Divider(modifier = Modifier.padding(vertical = 8.dp), color = Color.DarkGray)
+                        Divider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = Color.DarkGray
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -87,11 +132,15 @@ fun CheckoutScreen(
                 }
             }
 
-            // Información de Envío
+
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Información de Envío", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-                // Aquí iría un formulario, pero por ahora usamos un texto placeholder
+                Text("Información de Envío",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
@@ -104,10 +153,15 @@ fun CheckoutScreen(
                 }
             }
 
-            // Metodo de Envío
+
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Método de Envío", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Método de Envío",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
@@ -121,11 +175,17 @@ fun CheckoutScreen(
                                 RadioButton(
                                     selected = envioSeleccionado == opcion,
                                     onClick = { envioSeleccionado = opcion },
-                                    colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF720B0B), unselectedColor = Color.Gray)
+                                    colors = RadioButtonDefaults.colors(
+                                        selectedColor = Color(0xFF720B0B),
+                                        unselectedColor = Color.Gray
+                                    )
                                 )
                                 Column {
                                     Text(opcion.first, color = Color.White)
-                                    Text("$${formatPrice(opcion.second)}", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                                    Text("$${formatPrice(opcion.second)}",
+                                        color = Color.Gray,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
                             }
                         }
@@ -133,30 +193,55 @@ fun CheckoutScreen(
                 }
             }
 
-            // Total Final
+
             item {
                 Spacer(modifier = Modifier.height(24.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal=16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Total Final:", style = MaterialTheme.typography.titleLarge, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text("$${formatPrice(totalConEnvio)}", style = MaterialTheme.typography.headlineMedium, color = Color(0xFF00E676), fontWeight = FontWeight.Bold)
+                    Text(
+                        "Total Final:",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        "$${formatPrice(totalConEnvio)}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color(0xFF00E676),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
-            // Botón de Pago
+
+
             item {
                 Button(
                     onClick = {
-                        val success = when (envioSeleccionado.first) {
-                            "Estándar (3-5 días)" -> true   // Compra exitosa
-                            "Express (1-2 días)" -> false  // Compra fallida
-                            else -> false
-                        }
+                        if (envioSeleccionado.first == "Estándar (3-5 días)") {
+                            // 🔥 COMPRA REAL AQUÍ
+                            loading = true
+                            carritoViewModel.confirmarCompra(
+                                onSuccess = {
+                                    loading = false
+                                    compraExitosa = true
+                                },
+                                onError = { error ->
+                                    loading = false
+                                    mensajeError = error
+                                    onPurchaseComplete(false)
+                                }
+                            )
+                        } else {
 
-                        onPurchaseComplete(success)
+                            mensajeError = "Error al procesar el envío express."
+                            onPurchaseComplete(false)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,15 +249,18 @@ fun CheckoutScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF720B0B)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(
-                        "Pagar",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    if (loading) {
+                        CircularProgressIndicator(color = Color.White)
+                    } else {
+                        Text(
+                            "Pagar",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
-
         }
     }
 }
