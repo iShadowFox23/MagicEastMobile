@@ -33,7 +33,7 @@ fun CatalogoCartasScreen(
     viewModel: MtgCardsViewModel = viewModel()
 ) {
     val state = viewModel.uiState
-    val state = viewModel.uiState
+
 
     LaunchedEffect(Unit) {
         if (viewModel.uiState.cards.isEmpty()) {

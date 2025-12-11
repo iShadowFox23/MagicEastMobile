@@ -12,7 +12,8 @@ data class Producto(
     val categoria: String,
     val imagen: String?,
     val descripcion: String?,
-    val estado: String
+    val estado: String,
+    val setName: String? = null
 ) {
 
     val imagenUrl: String?

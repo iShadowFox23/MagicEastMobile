@@ -12,11 +12,13 @@ import kotlinx.coroutines.launch
 data class SingleCartaUiState(
     val loading: Boolean = false,
     val carta: Carta? = null,
-    val error: String? = null
+    val error: String? = null,
+    val productoSugeridoId: Int? = null
 )
 
 class SingleCartaViewModel(
-    private val repository: MtgCardsRepository = MtgCardsRepository()
+    private val repository: MtgCardsRepository = MtgCardsRepository(),
+    private val productoRepository: com.example.magiceast.data.repository.ProductoApiRepository = com.example.magiceast.data.repository.ProductoApiRepository()
 ) : ViewModel() {
 
     var uiState by mutableStateOf(SingleCartaUiState())
@@ -33,6 +35,7 @@ class SingleCartaViewModel(
                         carta = card,
                         error = null
                     )
+                    buscarProductoDelSet(card.setName)
                 }
                 .onFailure { throwable ->
                     uiState = uiState.copy(
@@ -40,6 +43,24 @@ class SingleCartaViewModel(
                         error = throwable.message ?: "Error al cargar la carta"
                     )
                 }
+        }
+    }
+
+    private fun buscarProductoDelSet(setName: String?) {
+        if (setName.isNullOrBlank()) return
+
+        viewModelScope.launch {
+            try {
+                val productos = productoRepository.listarProductos()
+                val productoEncontrado = productos.find { it.setName.equals(setName, ignoreCase = true) }
+                
+                if (productoEncontrado != null) {
+                   uiState = uiState.copy(productoSugeridoId = productoEncontrado.id)
+                }
+            } catch (e: Exception) {
+                // Si falla, simplemente no mostramos sugerencia
+                e.printStackTrace()
+            }
         }
     }
 }

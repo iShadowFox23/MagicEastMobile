@@ -161,6 +161,16 @@ fun SingleCartaScreen(
                             style = MaterialTheme.typography.bodyMedium
                         )
 
+                        if (state.productoSugeridoId != null) {
+                            Spacer(Modifier.height(16.dp))
+                            Button(
+                                onClick = { navController.navigate("detalle/${state.productoSugeridoId}") },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE))
+                            ) {
+                                Text("Ver Producto del Set", color = Color.White)
+                            }
+                        }
+
                     }
                 }
             }

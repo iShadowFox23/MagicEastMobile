@@ -26,7 +26,8 @@ fun ProductoApiDto.toDomain(): Producto {
         categoria = categorias,
         imagen = imagenCompleta,
         descripcion = descripcion,
-        estado = "Nuevo"
+        estado = "Nuevo",
+        setName = setName
     )
 }
 
@@ -40,7 +41,7 @@ fun Producto.toDto(): ProductoApiDto {
         precio = precio,
         stock = stock,
         descripcion = descripcion ?: "",
-
-        imagen = imagen?.substringAfterLast("/")
+        imagen = imagen?.substringAfterLast("/"),
+        setName = setName
     )
 }
