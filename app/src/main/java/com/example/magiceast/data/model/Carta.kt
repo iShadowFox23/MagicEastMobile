@@ -9,8 +9,7 @@ data class Carta(
     val manaCost: String?,
     val typeLine: String?,
     val imageUrl: String?,
-    val valor: Int,
-    val stock: Int
+    val setName: String?
 )
 
 
@@ -35,7 +34,6 @@ fun ScryfallCardDto.toDomain(): Carta {
         manaCost = finalManaCost,
         typeLine = finalTypeLine,
         imageUrl = finalImage,
-        valor = Random.nextInt(from = 500, until = 100_001),
-        stock = Random.nextInt(0, 11)
+        setName = setName
     )
 }

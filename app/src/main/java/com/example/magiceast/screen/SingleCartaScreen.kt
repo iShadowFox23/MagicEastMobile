@@ -109,13 +109,6 @@ fun SingleCartaScreen(
                 state.carta != null -> {
                     val carta = state.carta
 
-                    // Cantidad seleccionada, no puede pasar del stock ni bajar de 1 (si hay stock)
-                    var cantidad by remember(carta.id) {
-                        mutableIntStateOf(if (carta.stock > 0) 1 else 0)
-                    }
-
-                    val tieneStock = carta.stock > 0
-
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -160,94 +153,14 @@ fun SingleCartaScreen(
                             )
                         }
 
-                        Spacer(Modifier.height(12.dp))
-
-                        Text(
-                            text = "Valor: ${clpFormatter.format(carta.valor)}",
-                            color = Color(0xFF00E676),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-
                         Spacer(Modifier.height(8.dp))
 
                         Text(
-                            text = "Stock disponible: ${carta.stock}",
-                            color = if (tieneStock) Color(0xFF00E676) else Color.Red,
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium
+                            text = "Set: ${carta.setName ?: "Desconocido"}",
+                            color = Color.LightGray,
+                            style = MaterialTheme.typography.bodyMedium
                         )
 
-                        Spacer(Modifier.height(16.dp))
-
-                        if (tieneStock) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                OutlinedButton(
-                                    onClick = {
-                                        if (cantidad > 1) cantidad -= 1
-                                    },
-                                    enabled = cantidad > 1
-                                ) {
-                                    Text("-")
-                                }
-
-                                Text(
-                                    text = cantidad.toString(),
-                                    color = Color.White,
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold
-                                )
-
-                                OutlinedButton(
-                                    onClick = {
-                                        if (cantidad < carta.stock) cantidad += 1
-                                    },
-                                    enabled = cantidad < carta.stock
-                                ) {
-                                    Text("+")
-                                }
-                            }
-
-                            Spacer(Modifier.height(24.dp))
-                        } else {
-                            Spacer(Modifier.height(32.dp))
-                        }
-
-
-                        Button(
-                            onClick = {
-                                if (tieneStock && cantidad > 0) {
-                                    carritoViewModel.agregarCartaAlCarrito(carta, cantidad)
-
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Carta agregada al carrito",
-                                            withDismissAction = true
-                                        )
-                                    }
-                                }
-                            },
-                            enabled = tieneStock && cantidad > 0,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (tieneStock) Color(0xFF720B0B) else Color(0xFF444444),
-                                contentColor = Color.White,
-                                disabledContainerColor = Color(0xFF444444),
-                                disabledContentColor = Color.LightGray
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                        ) {
-                            Text(
-                                text = if (tieneStock) "Agregar al carrito" else "Sin stock",
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
                     }
                 }
             }

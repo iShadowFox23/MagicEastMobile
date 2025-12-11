@@ -7,6 +7,9 @@ data class ScryfallCardDto(
     val id: String? = null,
     val name: String? = null,
 
+    @SerializedName("set_name")
+    val setName: String? = null,
+
     @SerializedName("mana_cost")
     val manaCost: String? = null,
 

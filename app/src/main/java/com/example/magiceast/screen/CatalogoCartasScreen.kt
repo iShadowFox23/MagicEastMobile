@@ -33,7 +33,7 @@ fun CatalogoCartasScreen(
     viewModel: MtgCardsViewModel = viewModel()
 ) {
     val state = viewModel.uiState
-    val clpFormatter = NumberFormat.getCurrencyInstance(ULocale("es_CL"))
+    val state = viewModel.uiState
 
     LaunchedEffect(Unit) {
         if (viewModel.uiState.cards.isEmpty()) {
@@ -163,9 +163,8 @@ fun CatalogoCartasScreen(
                                         )
                                         Spacer(Modifier.height(6.dp))
                                         Text(
-                                            "Valor: ${clpFormatter.format(card.valor)}",
-                                            color = Color(0xFF00E676),
-                                            fontWeight = FontWeight.Bold,
+                                            "Set: ${card.setName ?: "Desconocido"}",
+                                            color = Color.LightGray,
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }

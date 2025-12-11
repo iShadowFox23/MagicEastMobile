@@ -3,7 +3,7 @@ package com.example.magiceast.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.magiceast.model.Producto
-import com.example.magiceast.data.model.Carta
+
 import com.example.magiceast.network.RetrofitInstance
 import com.example.magiceast.network.CompraDTO
 import com.example.magiceast.network.ItemCompraDTO
@@ -34,37 +34,7 @@ class CarritoViewModel : ViewModel() {
         _carrito.value = listaActual.toList()
     }
 
-    fun agregarCartaAlCarrito(carta: Carta, cantidad: Int) {
 
-        val producto = Producto(
-            id = carta.id?.hashCode() ?: carta.hashCode(),
-            precio = carta.valor,
-            precioAntiguo = carta.valor,
-            descuento = 0,
-            stock = carta.stock,
-            nombre = carta.name ?: "Carta sin nombre",
-            categoria = "Cartas MTG",
-            imagen = carta.imageUrl,
-            descripcion = carta.typeLine,
-            estado = "Nuevo"
-        )
-
-        val listaActual = _carrito.value.toMutableList()
-        val index = listaActual.indexOfFirst { it.producto.id == producto.id }
-
-        if (index != -1) {
-            val item = listaActual[index]
-            val nuevaCantidad = (item.cantidad + cantidad).coerceAtMost(producto.stock)
-            listaActual[index] = item.copy(cantidad = nuevaCantidad)
-        } else {
-            val cantidadFinal = cantidad.coerceAtMost(producto.stock)
-            if (cantidadFinal > 0) {
-                listaActual.add(ItemCarrito(producto, cantidadFinal))
-            }
-        }
-
-        _carrito.value = listaActual.toList()
-    }
 
     fun incrementarCantidad(producto: Producto) {
         val listaActual = _carrito.value.toMutableList()
