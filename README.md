@@ -1,4 +1,4 @@
-Copyright (c) 2025 MaginEast
+Copyright (c) 2025 MagicEast
 
 Por la presente se concede permiso, sin cargo, a cualquier persona que obtenga una copia
 de este software y de los archivos de documentación asociados, para tratar
