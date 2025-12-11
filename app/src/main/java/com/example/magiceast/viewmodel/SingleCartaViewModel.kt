@@ -52,13 +52,18 @@ class SingleCartaViewModel(
         viewModelScope.launch {
             try {
                 val productos = productoRepository.listarProductos()
-                val productoEncontrado = productos.find { it.setName.equals(setName, ignoreCase = true) }
-                
+                val productoEncontrado = productos.find { p ->
+                    val productoSets = p.setName?.split(",")?.map { it.trim().lowercase() } ?: emptyList()
+                    val cartaSet = setName?.trim()?.lowercase() ?: ""
+
+                    productoSets.contains(cartaSet)
+                }
+
+
                 if (productoEncontrado != null) {
                    uiState = uiState.copy(productoSugeridoId = productoEncontrado.id)
                 }
             } catch (e: Exception) {
-                // Si falla, simplemente no mostramos sugerencia
                 e.printStackTrace()
             }
         }

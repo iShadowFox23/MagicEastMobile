@@ -11,6 +11,6 @@ data class ProductoApiDto(
     val stock: Int,
     val descripcion: String,
     val imagen: String?,
-    @SerializedName("set_name")
+    @SerializedName("set")
     val setName: String? = null
 )

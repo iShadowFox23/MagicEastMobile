@@ -32,6 +32,14 @@ class ProductoApiViewModel(
         viewModelScope.launch {
             try {
                 val lista = repository.listarProductos()
+
+                lista.forEach { producto ->
+                    android.util.Log.d(
+                        "SET_DEBUG",
+                        "Producto: ${producto.nombre} | Set: ${producto.setName}"
+                    )
+                }
+
                 uiState = uiState.copy(
                     loading = false,
                     productos = lista,
